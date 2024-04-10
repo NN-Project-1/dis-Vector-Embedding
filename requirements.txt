@@ -1,0 +1,24 @@
+requests
+aiohttp
+#numpy==1.21
+soundfile
+
+# python dis_vector_data_pre.py \
+#       --syspin_resampled_data_path /home/vijay/Desktop/All_Files/ALL_TTS/DIS_Vector_Embedding_Integration/Data\
+#       --syspin_raw_data_path /home/vijay/Desktop/All_Files/ALL_TTS/DIS_Vector_Embedding_Integration/Data \
+#       --manifest_folder /home/vijay/Desktop/All_Files/ALL_TTS/DIS_Vector_Embedding_Integration/output/manifest_folder \
+#       --generate_charecter_set True \
+#       --duration_folder /home/vijay/Desktop/All_Files/ALL_TTS/DIS_Vector_Embedding_Integration/output/duration_folder \
+#       --run_mode "syspin_prep" \
+#       --nj 2 \
+#       --sr 16000 \
+#       --file_limit 500 \
+#       --dur_range [1,15] \
+#       --dur_selection_per_speaker 1
+
+
+tts --text "hey vijay how are you" \
+    --model_path /home/vijay/Desktop/All_Files/ALL_TTS/DIS_Vector_Embedding_Integration/yourtts_ch_kn/best_model.pth \
+    --config_path
+    --out_path  \
+    --language_idx "English" --speaker_idx "English_Male"
