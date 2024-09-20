@@ -1,4 +1,5 @@
-# 🎤 Dis-Vector: Disentangled Voice Embeddings for Conversion and Synthesis
+##  Dis-Vector: Disentangled Voice Embeddings for Conversion and Synthesis 🎤✨
+
 
 Welcome to the **Dis-Vector** project! This repository contains the implementation and evaluation of our advanced voice conversion and synthesis model that utilizes disentangled embeddings to accurately capture and transfer speaker characteristics across languages.
 
