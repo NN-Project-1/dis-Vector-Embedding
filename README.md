@@ -4,15 +4,37 @@ Welcome to the **Dis-Vector** project! This repository contains the implementati
 
 ## 📚 Table of Contents
 1. [Overview](#overview)
-2. [Datasets](#datasets)
-3. [Evaluation](#evaluation)
-4. [Results](#results)
-5. [MOS Score Analysis](#mos-score-analysis)
-6. [Conclusion](#conclusion)
-7. [License](#license)
+2. [Dis-Vector Model Details](#dis-vector-model-details)
+3. [Datasets](#datasets)
+4. [Evaluation](#evaluation)
+5. [Results](#results)
+6. [MOS Score Analysis](#mos-score-analysis)
+7. [Conclusion](#conclusion)
+8. [License](#license)
 
 ## 📝 Overview
 The Dis-Vector model represents a significant advancement in voice conversion and synthesis by employing disentangled embeddings to precisely capture and transfer speaker characteristics. Its architecture features separate encoders for content, pitch, rhythm, and timbre, enhancing both the accuracy and flexibility of voice cloning.
+
+## 🛠️ Dis-Vector Model Details
+The Dis-Vector model consists of several key components that work together to achieve effective voice conversion and synthesis:
+
+- **Architecture**: The model employs a multi-encoder architecture, with dedicated encoders for each feature type:
+  - **Content Encoder**: Captures linguistic content and phonetic characteristics.
+  - **Pitch Encoder**: Extracts pitch-related features to ensure accurate pitch reproduction.
+  - **Rhythm Encoder**: Analyzes rhythmic patterns and timing to preserve the original speech flow.
+  - **Timbre Encoder**: Captures unique vocal qualities of the speaker, allowing for more natural-sounding outputs.
+
+- **Disentangled Embeddings**: The model produces a 512-dimensional embedding vector, organized as follows:
+  - 256 elements for **content features**
+  - 128 elements for **pitch features**
+  - 64 elements for **rhythm features**
+  - 64 elements for **timbre features**
+
+- **Zero-Shot Capability**: The Dis-Vector model demonstrates remarkable zero-shot performance, enabling voice cloning and conversion across different languages without needing extensive training data for each target voice.
+
+- **Feature Transfer**: The model facilitates the transfer of individual features from the source voice to the target voice, allowing for customizable voice synthesis while retaining the original speech's essence.
+
+- **Evaluation Metrics**: Performance is assessed using various metrics, including Pitch Error Rate (PER), Rhythm Error Rate (RER), Timbre Error Rate (TER), and Content Preservation Rate (CPR), ensuring a comprehensive evaluation of the synthesized speech quality.
 
 ## 🗃️ Datasets
 For our evaluation, we utilized the following datasets:
@@ -33,9 +55,6 @@ Quantitative analysis measures the performance of the Dis-Vector model using dis
   
 ### 2. Distance Measurement
 - **Cosine Similarity**: Evaluates feature transfer and voice synthesis. 
-  \[
-  \text{Similarity Score (\%)} = \left( \frac{\text{Cosine Similarity} + 1}{2} \right) \times 100
-  \]
 
 ### 3. Ground Truth vs. TTS Output Similarity
 - Similarity scores for pitch, rhythm, timbre, and content help measure synthesis accuracy.
@@ -80,10 +99,5 @@ The results of our evaluation showcase the efficacy of the Dis-Vector model comp
 
 ## 🏁 Conclusion
 The Dis-Vector model's zero-shot capabilities enable effective voice cloning and conversion across different languages, setting a new benchmark for high-quality, customizable voice synthesis. The results of our experiments, including detailed embeddings and synthesis outputs, are available in the accompanying Git repository.
-
-## 📄 License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
 
 For more details, please refer to the documentation in this repository! Happy experimenting! 🚀
