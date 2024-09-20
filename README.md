@@ -10,7 +10,7 @@ Welcome to the **Dis-Vector** project! This repository contains the implementati
 5. [Results](#results)
 6. [MOS Score Analysis](#mos-score-analysis)
 7. [Conclusion](#conclusion)
-8. [License](#license)
+
 
 ## 📝 Overview
 The Dis-Vector model represents a significant advancement in voice conversion and synthesis by employing disentangled embeddings to precisely capture and transfer speaker characteristics. Its architecture features separate encoders for content, pitch, rhythm, and timbre, enhancing both the accuracy and flexibility of voice cloning.
