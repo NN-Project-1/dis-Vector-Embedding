@@ -2,6 +2,10 @@
 
 Welcome to the **Dis-Vector** project! This repository contains the implementation and evaluation of our advanced voice conversion and synthesis model that utilizes disentangled embeddings to accurately capture and transfer speaker characteristics across languages.
 
+![Dis-Vector Architecture](architecture/DIS-Vector-V2.png)
+
+
+
 ## 📚 Table of Contents
 1. [Overview](#overview)
 2. [Dis-Vector Model Details](#dis-vector-model-details)
