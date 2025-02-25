@@ -265,6 +265,54 @@ class Encoder_CN_PI(nn.Module):
 
         return codes_x, emb_1, codes_f0, emb_2
 
+
+
+class Encoder_TI(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        
+        self.dim_neck = config.dim_neck_2
+        self.freq = config.freq_2
+        self.dim_tim = 37  
+        self.dim_enc = config.dim_enc_2  
+        self.dim_emb = config.dim_spk_emb  
+        self.chs_grp = config.chs_grp  
+        self.dropout = config.dropout
+        self.embedding_dim = 64  
+        
+        # 1D Convolutional layers for feature extraction
+        self.conv_layers = nn.Sequential(
+            nn.Conv1d(self.dim_tim, self.dim_enc, kernel_size=5, stride=1, padding=2),
+            nn.ReLU(),
+            nn.GroupNorm(self.dim_enc // self.chs_grp, self.dim_enc),
+        )
+        
+        # Transformer Encoder
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=self.dim_enc, 
+            nhead=8, 
+            dim_feedforward=512, 
+            dropout=self.dropout, 
+            activation='relu'
+        )
+        self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=4)
+        
+        # Linear projection for timbre embedding
+        self.embedding_layer = nn.Linear(self.dim_enc, self.embedding_dim)
+
+    def forward(self, x, mask=None):
+        x = self.conv_layers(x)
+        x = x.permute(2, 0, 1) 
+        
+        # Transformer encoding
+        x = self.transformer_encoder(x, src_key_padding_mask=mask)
+        
+        selected_timesteps = x[self.freq - 1::self.freq]
+        timbre_embedding = self.embedding_layer(selected_timesteps.mean(dim=0))
+        
+        return x, timbre_embedding
+
+
 class Decoder(nn.Module):
     def __init__(self, config):
         super().__init__()
@@ -284,55 +332,6 @@ class Decoder(nn.Module):
         decoder_output = self.linear_projection(outputs)
         return decoder_output          
 
-class Encoder_TI(nn.Module):
-    def __init__(self, config):
-        super().__init__()
-
-        self.dim_neck_2 = config.dim_neck_2  
-        self.freq_2 = config.freq_2 
-        self.dim_tim = 37  
-        self.dim_enc_2 = config.dim_enc_2  
-        self.dim_emb = config.dim_spk_emb 
-        self.chs_grp = config.chs_grp  
-        self.dropout = config.dropout  
-        
-        convolutions = []
-        for i in range(1):
-            conv_layer = nn.Sequential(
-                ConvNorm(self.dim_tim if i == 0 else self.dim_enc_2,
-                         self.dim_enc_2,
-                         kernel_size=5, stride=1,
-                         padding=2,
-                         dilation=1, w_init_gain='relu'),
-                nn.GroupNorm(self.dim_enc_2 // self.chs_grp, self.dim_enc_2))
-            convolutions.append(conv_layer)
-        self.convolutions = nn.ModuleList(convolutions)
-
-        self.lstm = nn.LSTM(self.dim_enc_2, self.dim_neck_2, 1, batch_first=True, bidirectional=True)
-        self.embedding_dim = 64
-        self.embedding_layer = None  
-
-    def forward(self, x, mask):
-        for conv in self.convolutions:
-            x = F.relu(conv(x))
-        x = x.transpose(1, 2)
-        
-        self.lstm.flatten_parameters()
-        outputs, _ = self.lstm(x)
-        if mask is not None:
-            outputs = outputs * mask
-        out_forward = outputs[:, :, :self.dim_neck_2]
-        out_backward = outputs[:, :, self.dim_neck_2:]
-            
-        codes = torch.cat((out_forward[:, self.freq_2 - 1::self.freq_2, :], out_backward[:, ::self.freq_2, :]), dim=-1)
-        flattened_codes = codes.flatten(start_dim=1)
-        if self.embedding_layer is None:
-            expected_flattened_dim = flattened_codes.shape[1]
-      
-            self.embedding_layer = nn.Linear(expected_flattened_dim, self.embedding_dim).to(flattened_codes.device)
-        emb_3 = self.embedding_layer(flattened_codes)
-
-        return codes, emb_3   
     
 
 class Vector_Mode(nn.Module):
