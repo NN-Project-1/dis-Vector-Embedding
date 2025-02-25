@@ -30,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument('--checkpoint_save_epoch', type=int, default=100)
     parser.add_argument('--checkpoint_save_interval', type=int, default=100)
     parser.add_argument('--stage', type=int, default=1, help='0: preprocessing; 1: training')
-    parser.add_argument('--config', type=str, default='spsp2-large')
+    parser.add_argument('--config', type=str, default='Large_B')
     parser.add_argument('--mode', type=str, default='Training') 
     args = parser.parse_args()
 
