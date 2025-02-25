@@ -16,28 +16,29 @@ def main(config, args):
     elif args.stage == 1:
         data_loader = get_loader(config)
         
-        solver = Trainer(data_loader, args, config)
-        solver.train()
+        trainer = Trainer(data_loader, args, config)
+        trainer.train()
             
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
-    parser.add_argument('--num_epochs', type=int, default=1000)
-    parser.add_argument('--num_iters', type=int, default=10000)
+    parser.add_argument('--epochs', type=int, default=1000)
+    parser.add_argument('--iterations', type=int, default=10000)
     parser.add_argument('--resume_epoch', type=int, default=0)
-    parser.add_argument('--resume_iters', type=int, default=0)
-    parser.add_argument('--log_step', type=int, default=100)
-    parser.add_argument('--ckpt_save_epoch', type=int, default=100)
-    parser.add_argument('--ckpt_save_step', type=int, default=100)
+    parser.add_argument('--resume_iterations', type=int, default=0)
+    parser.add_argument('--log_interval', type=int, default=100)
+    parser.add_argument('--checkpoint_save_epoch', type=int, default=100)
+    parser.add_argument('--checkpoint_save_interval', type=int, default=100)
     parser.add_argument('--stage', type=int, default=1, help='0: preprocessing; 1: training')
-    parser.add_argument('--config_name', type=str, default='spsp2-large')
-    parser.add_argument('--model_type', type=str, default='Training') 
+    parser.add_argument('--config', type=str, default='spsp2-large')
+    parser.add_argument('--mode', type=str, default='Training') 
     args = parser.parse_args()
 
-    config = yaml.safe_load(open(os.path.join('configs', f'{args.config_name}.yaml'), 'r'))
+    config = yaml.safe_load(open(os.path.join('configs', f'{args.config}.yaml'), 'r'))
     config = Dict2Class(config)
-    if args.model_type == 'F':
-        config.model_type = 'F'
-        config.dim_pit = config.dim_con + config.dim_pit 
+    
+    if args.mode == 'F':
+        config.mode = 'F'
+        config.pitch_dim = config.content_dim + config.pitch_dim 
     
     main(config, args)
