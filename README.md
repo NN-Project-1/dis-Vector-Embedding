@@ -113,10 +113,16 @@ Where:
 Quantitative analysis measures the performance of the Dis-Vector model using distance metrics and statistical measures.
 
 ### 1. Test Setup
+  <p align="center">
+  <img src="architecture/plot_dif.png" alt="DIS-Vector Architecture">
+</p>
+
+
 - **Pitch Testing**: Evaluates pitch variations using Pitch Error Rate (PER).
 - **Rhythm Testing**: Assesses rhythmic patterns with Rhythm Error Rate (RER).
 - **Timbre Testing**: Analyzes vocal qualities using Timbre Error Rate (TER).
 - **Content Testing**: Ensures content accuracy using Content Preservation Rate (CPR).
+- 
   
 ### 2. Distance Measurement
 - **Cosine Similarity**: Evaluates feature transfer and voice synthesis. 
