@@ -50,6 +50,14 @@ The Dis-Vector model consists of several key components that work together to ac
 - **Zero-Shot Capability**: The Dis-Vector model demonstrates remarkable zero-shot performance, enabling voice cloning and conversion across different languages without needing extensive training data for each target voice.
 
 - **Feature Transfer**: The model facilitates the transfer of individual features from the source voice to the target voice, allowing for customizable voice synthesis while retaining the original speech's essence.
+
+## **VITS-TTS integration **
+Integrating VITS with DIS-Vector enhances its capabilities by leveraging disentangled embeddings of speech components (content, pitch, rhythm, and timbre). DIS-Vector provides a fine-grained control over these components, enabling high-quality voice conversion and zero-shot voice cloning. This integration allows VITS to generate speech in new voices, adapting to different speakers and languages without requiring speaker-specific training data, offering more flexibility and realism in synthetic speech generation.
+
+<p align="center">
+  <img src="architecture/dis-vits.png" alt="DIS-Vector Architecture">
+</p>
+
  
 ## **Speech Component Representation**  
 
@@ -113,7 +121,7 @@ Where:
 Quantitative analysis measures the performance of the Dis-Vector model using distance metrics and statistical measures.
 
 ### 1. Test Setup
-  <p align="center">
+  <p align="left">
   <img src="architecture/plot_dif.png" alt="DIS-Vector Architecture">
 </p>
 
