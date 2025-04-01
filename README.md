@@ -1,4 +1,4 @@
-## DIS-Vector - An Effective Low-Resource, Zero-Shot Approach for Controllable, End-to-End Voice Conversion and Cloning🎤✨
+## DIS-Vector - An Effective Low-Resource, Zero-Shot Approach for Controllable, End-to-End Voice Conversion and Cloning 🎤✨
 
 Welcome to the DIS-Vector project! This repository presents an advanced low-resource, zero-shot voice conversion and cloning model that leverages disentangled embeddings, clustering techniques, and language-based similarity matching to achieve highly natural and controllable voice synthesis.
 
@@ -39,6 +39,17 @@ The Dis-Vector model consists of several key components that work together to ac
   - **Pitch Encoder**: Extracts pitch-related features to ensure accurate pitch reproduction.
   - **Rhythm Encoder**: Analyzes rhythmic patterns and timing to preserve the original speech flow.
   - **Timbre Encoder**: Captures unique vocal qualities of the speaker, allowing for more natural-sounding outputs.
+ 
+  **Speech Component Representation** :
+    A speech signal s(t)  is decomposed into four distinct components:
+  <p align="center">
+  <img src="architecture/combine.png" alt="Dis-Vector Architecture">
+</p>
+
+   C(t)(Content)  :Represents linguistic information.
+   P(t) (Pitch)   : Corresponds to the fundamental frequency
+   R(t) (Rhtyhm)  :Captures duration and timing patterns
+   T(t) (Timbre)  : Defines speaker identity characteristics
 
 - **Disentangled Embeddings**: The model produces a 512-dimensional embedding vector, organized as follows:
   - 256 elements for **content features**
@@ -49,6 +60,7 @@ The Dis-Vector model consists of several key components that work together to ac
 - **Zero-Shot Capability**: The Dis-Vector model demonstrates remarkable zero-shot performance, enabling voice cloning and conversion across different languages without needing extensive training data for each target voice.
 
 - **Feature Transfer**: The model facilitates the transfer of individual features from the source voice to the target voice, allowing for customizable voice synthesis while retaining the original speech's essence.
+- **Loss details**  :
 
 ## 📂 Database
 ### LIMMITS Dataset
