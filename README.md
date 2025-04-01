@@ -46,6 +46,10 @@ The Dis-Vector model consists of several key components that work together to ac
   - 128 elements for **pitch features**
   - 64 elements for **rhythm features**
   - 64 elements for **timbre features**
+    
+- **Zero-Shot Capability**: The Dis-Vector model demonstrates remarkable zero-shot performance, enabling voice cloning and conversion across different languages without needing extensive training data for each target voice.
+
+- **Feature Transfer**: The model facilitates the transfer of individual features from the source voice to the target voice, allowing for customizable voice synthesis while retaining the original speech's essence.
  
 ## **Speech Component Representation**  
 
@@ -95,10 +99,6 @@ Where:
 - \ L_{timbre} \ preserves speaker identity characteristics.  
 
 
-- **Zero-Shot Capability**: The Dis-Vector model demonstrates remarkable zero-shot performance, enabling voice cloning and conversion across different languages without needing extensive training data for each target voice.
-
-- **Feature Transfer**: The model facilitates the transfer of individual features from the source voice to the target voice, allowing for customizable voice synthesis while retaining the original speech's essence.
-- **Loss details**  :
 
 ## 📂 Database
 ### LIMMITS Dataset
