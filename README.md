@@ -59,10 +59,10 @@ A speech signal \( s(t) \) is decomposed into four distinct components:
   <img src="architecture/combine.png" alt="DIS-Vector Architecture">
 </p>
 
-- **\ C(t) \ (Content):** Represents linguistic information.  
-- **\ P(t) \ (Pitch)  :** Corresponds to the fundamental frequency \( F_0 \).  
-- **\ R(t) \ (Rhythm) :** Captures duration and timing patterns.  
-- **\ T(t) \ (Timbre) :** Defines speaker identity characteristics.
+- **C(t) (Content):** Represents linguistic information.  
+- **P(t) (Pitch):** Corresponds to the fundamental frequency \( F_0 \).  
+- **R(t) (Rhythm):** Captures duration and timing patterns.  
+- **T(t) (Timbre):** Defines speaker identity characteristics.
 
 
 ### **Types of Loss Functions**
@@ -93,10 +93,10 @@ The following loss functions are utilized in the model:
 </p>
 
 Where:  
-- \ L_{content} \ ensures linguistic consistency.  
-- \ L_{pitch} \ preserves fundamental frequency information.  
-- \ L_{rhythm} \ maintains speech timing.  
-- \ L_{timbre} \ preserves speaker identity characteristics.  
+- **L_content** ensures linguistic consistency.  
+- **L_pitch** preserves fundamental frequency information.  
+- **L_rhythm** maintains speech timing.  
+- **L_timbre** preserves speaker identity characteristics.
 
 
 
