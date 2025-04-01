@@ -64,9 +64,9 @@ A speech signal \( s(t) \) is decomposed into four distinct components:
 
 To optimize the separation of speech components into distinct embedding spaces, the total loss function is defined as:
 
-\[
-L = \lambda_c L_{content} + \lambda_p L_{pitch} + \lambda_r L_{rhythm} + \lambda_t L_{timbre}
-\]
+<p align="center">
+  <img src="architecture/loss.png" alt="DIS-Vector Architecture">
+</p>
 
 Where:  
 
