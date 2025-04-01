@@ -58,7 +58,22 @@ A speech signal \( s(t) \) is decomposed into four distinct components:
 - **\( C(t) \) (Content):** Represents linguistic information.  
 - **\( P(t) \) (Pitch):** Corresponds to the fundamental frequency \( F_0 \).  
 - **\( R(t) \) (Rhythm):** Captures duration and timing patterns.  
-- **\( T(t) \) (Timbre):** Defines speaker identity characteristics.  
+- **\( T(t) \) (Timbre):** Defines speaker identity characteristics.
+  
+## **Disentangled Embedding Loss**  
+
+To optimize the separation of speech components into distinct embedding spaces, the total loss function is defined as:
+
+\[
+L = \lambda_c L_{content} + \lambda_p L_{pitch} + \lambda_r L_{rhythm} + \lambda_t L_{timbre}
+\]
+
+Where:  
+
+- \( L_{content} \) ensures linguistic consistency.  
+- \( L_{pitch} \) preserves fundamental frequency information.  
+- \( L_{rhythm} \) maintains speech timing.  
+- \( L_{timbre} \) preserves speaker identity characteristics.  
 
 
 - **Zero-Shot Capability**: The Dis-Vector model demonstrates remarkable zero-shot performance, enabling voice cloning and conversion across different languages without needing extensive training data for each target voice.
