@@ -55,25 +55,44 @@ A speech signal \( s(t) \) is decomposed into four distinct components:
   <img src="architecture/combine.png" alt="DIS-Vector Architecture">
 </p>
 
-- **\( C(t) \) (Content):** Represents linguistic information.  
-- **\( P(t) \) (Pitch):** Corresponds to the fundamental frequency \( F_0 \).  
-- **\( R(t) \) (Rhythm):** Captures duration and timing patterns.  
-- **\( T(t) \) (Timbre):** Defines speaker identity characteristics.
-  
-## **Disentangled Embedding Loss**  
+- **\ C(t) \ (Content):** Represents linguistic information.  
+- **\ P(t) \ (Pitch)  :** Corresponds to the fundamental frequency \( F_0 \).  
+- **\ R(t) \ (Rhythm) :** Captures duration and timing patterns.  
+- **\ T(t) \ (Timbre) :** Defines speaker identity characteristics.
 
-To optimize the separation of speech components into distinct embedding spaces, the total loss function is defined as:
+
+### **Types of Loss Functions**
+
+The following loss functions are utilized in the model:
+
+
+- **Mean Squared Error (MSE) Loss**:  
+ The MSE Loss is used for minimizing the difference between the predicted and actual values for continuous speech components such as pitch and timbre. It is applied as an overall reconstruction loss to ensure that the model accurately reconstructs these continuous components.
+
+  <p align="center">
+  <img src="architecture/mse.png" alt="DIS-Vector Architecture">
+</p>
+
+- **Kullback-Leibler (KL) Divergence Loss**:  
+  Measures the difference between two probability distributions, often used for speaker similarity matching and ensuring that the embeddings align with the desired distributions.
+  
+<p align="center">
+  <img src="architecture/KL.png" alt="DIS-Vector Architecture">
+</p>
+
+
+- **Disentanglement Loss**:  
+  Ensures that the learned embeddings for each speech component (content, pitch, rhythm, timbre) remain distinct and non-interfering, contributing to the overall performance of the model.To optimize the separation of speech components into distinct embedding spaces, the total loss function is defined as:
 
 <p align="center">
   <img src="architecture/loss.png" alt="DIS-Vector Architecture">
 </p>
 
 Where:  
-
-- \( L_{content} \) ensures linguistic consistency.  
-- \( L_{pitch} \) preserves fundamental frequency information.  
-- \( L_{rhythm} \) maintains speech timing.  
-- \( L_{timbre} \) preserves speaker identity characteristics.  
+- \ L_{content} \ ensures linguistic consistency.  
+- \ L_{pitch} \ preserves fundamental frequency information.  
+- \ L_{rhythm} \ maintains speech timing.  
+- \ L_{timbre} \ preserves speaker identity characteristics.  
 
 
 - **Zero-Shot Capability**: The Dis-Vector model demonstrates remarkable zero-shot performance, enabling voice cloning and conversion across different languages without needing extensive training data for each target voice.
