@@ -35,27 +35,31 @@ Explore our [live demo here](https://nn-project-1.github.io/dis-vector_web/) sho
 The Dis-Vector model consists of several key components that work together to achieve effective voice conversion and synthesis:
 
 - **Architecture**: The model employs a multi-encoder architecture, with dedicated encoders for each feature type:
+
   - **Content Encoder**: Captures linguistic content and phonetic characteristics.
   - **Pitch Encoder**: Extracts pitch-related features to ensure accurate pitch reproduction.
   - **Rhythm Encoder**: Analyzes rhythmic patterns and timing to preserve the original speech flow.
   - **Timbre Encoder**: Captures unique vocal qualities of the speaker, allowing for more natural-sounding outputs.
- 
-  **Speech Component Representation** :
-    A speech signal s(t)  is decomposed into four distinct components:
-  <p align="center">
-  <img src="architecture/combine.png" alt="Dis-Vector Architecture">
-</p>
-
-   C(t)(Content)  :Represents linguistic information.
-   P(t) (Pitch)   : Corresponds to the fundamental frequency
-   R(t) (Rhtyhm)  :Captures duration and timing patterns
-   T(t) (Timbre)  : Defines speaker identity characteristics
 
 - **Disentangled Embeddings**: The model produces a 512-dimensional embedding vector, organized as follows:
   - 256 elements for **content features**
   - 128 elements for **pitch features**
   - 64 elements for **rhythm features**
   - 64 elements for **timbre features**
+ 
+## **Speech Component Representation**  
+
+A speech signal \( s(t) \) is decomposed into four distinct components:  
+
+<p align="center">
+  <img src="architecture/combine.png" alt="DIS-Vector Architecture">
+</p>
+
+- **\( C(t) \) (Content):** Represents linguistic information.  
+- **\( P(t) \) (Pitch):** Corresponds to the fundamental frequency \( F_0 \).  
+- **\( R(t) \) (Rhythm):** Captures duration and timing patterns.  
+- **\( T(t) \) (Timbre):** Defines speaker identity characteristics.  
+
 
 - **Zero-Shot Capability**: The Dis-Vector model demonstrates remarkable zero-shot performance, enabling voice cloning and conversion across different languages without needing extensive training data for each target voice.
 
