@@ -4,6 +4,9 @@ Welcome to the DIS-Vector project! This repository presents an advanced low-reso
 
 The **DIS-Vector** model introduces a novel approach to voice conversion by disentangling speech components content, pitch, rhythm, and timbre into separate embedding spaces, enabling fine-grained control over voice synthesis. Unlike traditional voice conversion models, DIS-Vector is capable of zero-shot voice cloning, meaning it can synthesize voices from unseen speakers and languages without requiring large-scale speaker-specific training data.
 
+We have Approach 1, which is the base version of DIS-Vector. The details are provided [here](https://github.com/NN-Project-1/dis-Vector-Embedding/blob/main/readme1.md).
+
+
 <p align="center">
   <img src="architecture/DIS-Vector-V2.png" alt="Dis-Vector Architecture">
 </p>
