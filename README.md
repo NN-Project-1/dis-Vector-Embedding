@@ -1,4 +1,4 @@
-## DIS-Vector - An Effective Low-Resource, Zero-Shot Approach for Controllable, End-to-End Voice Conversion and Cloning 🎤✨
+## DIS-VECTOR: AN EFFECTIVE APPROACH FOR CONTROLLABLE ZERO-SHOT VOICE CONVERSION AND CLONING IN LOW-RESOURCE LANGUAGES 🎤✨
 
 Welcome to the DIS-Vector project! This repository presents an advanced low-resource, zero-shot voice conversion and cloning model that leverages disentangled embeddings, clustering techniques, and language-based similarity matching to achieve highly natural and controllable voice synthesis.
 
