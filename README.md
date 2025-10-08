@@ -117,15 +117,6 @@ Where:
 
 
 
-## 📂 Database
-### LIMMITS Dataset
-- Features recordings from speakers of various Indian languages (English, Hindi, Kannada, Telugu, Bengali).
-- Approximately 1 hour of speech data with around 400 utterances per language.
-
-### VCTK Dataset
-- Includes recordings from multiple speakers with different accents and regional variations.
-- Utilizes data from 6 male and 2 female speakers, each providing approximately 1 hour of speech.
-
 ## 📊 Evaluation
 Quantitative analysis measures the performance of the Dis-Vector model using distance metrics and statistical measures.
 
@@ -133,7 +124,6 @@ Quantitative analysis measures the performance of the Dis-Vector model using dis
   <p align="left">
   <img src="architecture/plot_dif.png" alt="DIS-Vector Architecture">
 </p>
-
 
 - **Pitch Testing**: Evaluates pitch variations using Pitch Error Rate (PER).
 - **Rhythm Testing**: Assesses rhythmic patterns with Rhythm Error Rate (RER).
@@ -181,37 +171,6 @@ This technique ensures:
 - **Scalability for zero-shot voice conversion**, allowing seamless expansion with new speakers and languages.
 
 By leveraging this clustering-based framework, Dis-Vector significantly improves the accuracy and efficiency of voice conversion in **multilingual and low-resource language settings**, making it a robust solution for **global voice synthesis applications**.
-
-## 📈 Results
-The results of our evaluation showcase the efficacy of the Dis-Vector model compared to traditional models.
-
-### MOS Score for Monolingual Voice Conversion
-
-| Source Language (Gender) | Target Language (Gender) | MOS Score |
-|--------------------------|--------------------------|-----------|
-| English Male             | English Female           | 3.8       |
-| Hindi Female             | Hindi Male               | 3.7       |
-
-### MOS Score for Zero-Shot Cross-Lingual Voice Cloning
-
-| Source Language (Gender) | Target Language (Gender) | MOS Score |
-|--------------------------|--------------------------|-----------|
-| English Male             | Hindi Female             | 3.9       |
-| Hindi Female             | Telugu Male              | 3.7       |
-
-### Comparison of DIS-Vector with D-Vector
-
-| Source Lang. | Target Lang. | MOS LIMMITS Baseline | MOS (DIS Vector) |
-|--------------|--------------|----------------------|-------------------|
-| English      | English Female| 3.5                  | 3.9               |
-| Hindi        | Hindi Female  | 3.4                  | 3.7               |
-
-### Comparison with SpeechSplit2
-
-| Language      | SpeechSplit2 MOS Score | DIS-Vector MOS Score |
-|---------------|------------------------|-----------------------|
-| English Male   | 3.4                    | 3.8                   |
-| English Female | 3.5                    | 3.9                   |
 
 ## 🏁 Conclusion
 The Dis-Vector model's zero-shot capabilities, enhanced by clustering and similarity-based speaker retrieval, enable effective voice cloning and conversion across different languages. It sets a new benchmark for high-quality, customizable voice synthesis. 
