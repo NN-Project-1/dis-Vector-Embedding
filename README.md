@@ -14,12 +14,10 @@ We have Approach 1, which is the base version of DIS-Vector. The details are pro
 ## 📚 Table of Contents
 1. [Overview](#overview)
 2. [Dis-Vector Model Details](#dis-vector-model-details)
-3. [Datasets](#datasets)
-4. [Evaluation](#evaluation)
-5. [Clustering & Language Matching](#clustering--language-matching)
-6. [Results](#results)
-7. [MOS Score Analysis](#mos-score-analysis)
-8. [Conclusion](#conclusion)
+3. [Evaluation](#evaluation)
+4. [Clustering & Language Matching](#clustering--language-matching)
+5. [MOS Score Analysis](#mos-score-analysis)
+7. [Conclusion](#conclusion)
 
 ## 📝 Overview
 The Dis-Vector model represents a significant advancement in voice conversion and synthesis by employing disentangled embeddings and clustering methodologies to precisely capture and transfer speaker characteristics. It introduces a novel **language-based similarity approach** and **K-Means clustering** for efficient speaker retrieval and closest language matching during inference.
