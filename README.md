@@ -65,9 +65,9 @@ Integrating VITS with DIS-Vector enhances its capabilities by leveraging disenta
 Our GPT-based architecture for zero-shot voice cloning processes input text through a byte-pair encoding (BPE) tokenizer to generate subword tokens, which are then embedded and passed through a stack of autoregressive GPT-style Transformer blocks. These blocks are trained to predict discrete latent codes from a Vector-Quantized Variational Autoencoder (VQ-VAE), which encodes ground-truth acoustic features into discrete indices that serve as the training targets. Crucially, the pre-computed 512-dimensional DIS-Vector speaker embeddings, which disentangle content, pitch, rhythm, and timbre, are projected to the model's dimension and injected into the network through a dual-conditioning mechanism: they are concatenated with the encoder's input tokens and also used for Feature-wise Linear Modulation (FiLM) conditioning within the Transformer blocks' activations. This ensures the model's predictions are conditioned on both the linguistic content and the precise vocal characteristics of the target speaker. The output predicted VQ-VAE codes are subsequently decoded into frame-level acoustic representations, which, together with the DIS-Vector embeddings, condition a HiFi-GAN vocoder to synthesize the final waveform directly from the latent features, enabling high-fidelity, zero-shot voice cloning.
 
 <p align="center">
-  <img src="architecture/gpt.png" alt="DIS-Vector Architecture">
+  <img src="architecture/gpt.png" alt="DIS-Vector Architecture" width="400">
 </p>
- 
+
 ## **Speech Component Representation**  
 
 A speech signal \( s(t) \) is decomposed into four distinct components:  
