@@ -8,7 +8,7 @@ We have Approach 1, which is the base version of DIS-Vector. The details are pro
 
 
 <p align="center">
-  <img src="architecture/DIS-Vector-V2.png" alt="Dis-Vector Architecture">
+  <img src="architecture/DIS-Vector-V2.png" alt="Dis-Vector Architecture"  width="400">
 </p>
 
 ## 📚 Table of Contents
@@ -91,14 +91,14 @@ The following loss functions are utilized in the model:
  The MSE Loss is used for minimizing the difference between the predicted and actual values for continuous speech components such as pitch and timbre. It is applied as an overall reconstruction loss to ensure that the model accurately reconstructs these continuous components.
 
   <p align="center">
-  <img src="architecture/mse.png" alt="DIS-Vector Architecture">
+  <img src="architecture/mse.png" alt="DIS-Vector Architecture"  width="200">
 </p>
 
 - **Kullback-Leibler (KL) Divergence Loss**:  
   Measures the difference between two probability distributions, often used for speaker similarity matching and ensuring that the embeddings align with the desired distributions.
   
 <p align="center">
-  <img src="architecture/KL.png" alt="DIS-Vector Architecture">
+  <img src="architecture/KL.png" alt="DIS-Vector Architecture"  width="200">
 </p>
 
 
@@ -106,7 +106,7 @@ The following loss functions are utilized in the model:
   Ensures that the learned embeddings for each speech component (content, pitch, rhythm, timbre) remain distinct and non-interfering, contributing to the overall performance of the model.To optimize the separation of speech components into distinct embedding spaces, the total loss function is defined as:
 
 <p align="center">
-  <img src="architecture/loss.png" alt="DIS-Vector Architecture">
+  <img src="architecture/loss.png" alt="DIS-Vector Architecture"  width="200">
 </p>
 
 Where:  
@@ -122,7 +122,7 @@ Quantitative analysis measures the performance of the Dis-Vector model using dis
 
 ### 1. Test Setup
   <p align="center">
-  <img src="architecture/plot_dif.png" alt="DIS-Vector Architecture">
+  <img src="architecture/plot_dif.png" alt="DIS-Vector Architecture" width="300">
 </p>
 
 - **Pitch Testing**: Evaluates pitch variations using Pitch Error Rate (PER).
