@@ -73,7 +73,7 @@ Our GPT-based architecture for zero-shot voice cloning processes input text thro
 A speech signal \( s(t) \) is decomposed into four distinct components:  
 
 <p align="center">
-  <img src="architecture/combine.png" alt="DIS-Vector Architecture">
+  <img src="architecture/combine.png" alt="DIS-Vector Architecture"  width="200">
 </p>
 
 - **C(t) (Content):** Represents linguistic information.  
@@ -121,7 +121,7 @@ Where:
 Quantitative analysis measures the performance of the Dis-Vector model using distance metrics and statistical measures.
 
 ### 1. Test Setup
-  <p align="left">
+  <p align="center">
   <img src="architecture/plot_dif.png" alt="DIS-Vector Architecture">
 </p>
 
