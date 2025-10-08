@@ -68,6 +68,11 @@ Our GPT-based architecture for zero-shot voice cloning processes input text thro
   <img src="architecture/gpt.png" alt="DIS-Vector Architecture" width="400">
 </p>
 
+
+## 📐 Length Analysis
+
+In order to determine the most effective dimensionality for the DIS-Vector embeddings, we conducted a series of ablation experiments with different vector lengths, specifically 256, 512, 768, and 1024. The 256-dimensional configuration resulted in noticeable information loss, particularly in capturing fine-grained timbre variations, while the higher-dimensional settings (768 and 1024) introduced redundancy and led to slower convergence without significant improvements in synthesis quality. The 512-dimensional representation provided the best balance, offering sufficient capacity to disentangle content, pitch, rhythm, and timbre while maintaining training stability and computational efficiency. Consequently, the final architecture adopts 512D embeddings as an experimentally validated optimal trade-off between expressiveness and efficiency.
+
 ## **Speech Component Representation**  
 
 A speech signal \( s(t) \) is decomposed into four distinct components:  
