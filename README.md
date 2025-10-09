@@ -74,7 +74,7 @@ The Dis-Vector model consists of several key components that work together to ac
   <img src="architecture/dis-vits.png" alt="DIS-Vector Architecture">
 </p>
 
-Integration with VITS leverages disentangled embeddings (content, pitch, rhythm, timbre) for fine-grained control. This enables high-quality voice conversion and zero-shot cloning, allowing generation of new voices without speaker-specific training, improving flexibility and realism.
+Integrating VITS with DIS-Vector enhances its capabilities by leveraging disentangled embeddings of speech components (content, pitch, rhythm, and timbre). DIS-Vector provides fine-grained control over these components, enabling high-quality voice conversion and zero-shot voice cloning. This integration empowers VITS to generate speech in new voices, adapting to different speakers and languages without the need for speaker-specific training data, offering more flexibility and realism in synthetic speech generation.
 
 ---
 
@@ -84,7 +84,8 @@ Integration with VITS leverages disentangled embeddings (content, pitch, rhythm,
   <img src="architecture/gpt.png" alt="DIS-Vector Architecture" width="400">
 </p>
 
-GPT-based architecture processes input text via BPE tokenizer, embeds subword tokens, and passes them through GPT-style Transformer blocks to predict VQ-VAE discrete codes. DIS-Vector embeddings are injected via dual-conditioning (concatenation + FiLM), ensuring predictions are conditioned on content and vocal characteristics. Predicted codes are decoded and passed to HiFi-GAN for waveform synthesis, enabling high-fidelity zero-shot voice cloning.
+
+Our GPT-based architecture for zero-shot voice cloning processes input text through a byte-pair encoding (BPE) tokenizer to generate subword tokens, which are then embedded and passed through a stack of autoregressive GPT-style Transformer blocks. These blocks are trained to predict discrete latent codes from a Vector-Quantized Variational Autoencoder (VQ-VAE), which encodes ground-truth acoustic features into discrete indices that serve as the training targets. Crucially, the pre-computed 512-dimensional DIS-Vector speaker embeddings, which disentangle content, pitch, rhythm, and timbre, are projected to the model's dimension and injected into the network through a dual-conditioning mechanism: they are concatenated with the encoder's input tokens and also used for Feature-wise Linear Modulation (FiLM) conditioning within the Transformer blocks' activations. This ensures the model's predictions are conditioned on both the linguistic content and the precise vocal characteristics of the target speaker. The output predicted VQ-VAE codes are subsequently decoded into frame-level acoustic representations, which, together with the DIS-Vector embeddings, condition a HiFi-GAN vocoder to synthesize the final waveform directly from the latent features, enabling high-fidelity, zero-shot voice cloning.
 
 ---
 
@@ -166,23 +167,40 @@ Where:
 ## 9. Clustering & Language Matching
 
 ### 9.1 K-Means Clustering for Speaker Embeddings
-- Groups speakers by timbre and prosody  
-- Enables zero-shot conversion for unseen speakers  
-- Uses cluster centroids for nearest-match synthesis  
-- Enhances speaker variation capture while maintaining identity  
+Dis-Vector utilizes a **language-annotated speaker embedding database**, where each speaker is mapped to a distinct feature representation based on their **timbre and prosody characteristics**. To enable efficient **cross-speaker and cross-language voice conversion**, we apply **K-Means clustering** on these high-dimensional embeddings. This clustering process helps to:
+
+- **Group speakers** based on intrinsic vocal attributes such as pitch, intonation, and articulation patterns.
+- **Enable zero-shot voice conversion** by leveraging cluster-based matching, even for unseen speakers.
+- **Assign cluster centroids as representative embeddings**, allowing the system to select the closest match for synthesis.
+- **Improve generalization and adaptation** by ensuring robust speaker variation capture while maintaining speaker identity.
+
+By organizing the embedding space into well-defined clusters, Dis-Vector ensures a more structured and interpretable representation of speaker embeddings, enhancing the **quality and accuracy of voice conversion**.
 
 ### 9.2 Language-Based Similarity Matching
-- Cosine similarity between target and database embeddings  
-- Prioritizes linguistically similar speakers  
-- Ensures prosody preservation and accurate adaptation  
-- Enables natural feature transfer  
+
+
+During inference, the model selects the **most suitable speaker embedding** by computing **cosine similarity** between the **target speaker’s embedding** and the **pre-clustered speaker embeddings** in the database. This method prioritizes selecting a **linguistically similar speaker**, leading to:
+
+- **Better prosody preservation**, as speakers from the same linguistic background share similar pitch and rhythm structures.
+- **Accurate voice adaptation**, ensuring that even when a target speaker’s language is unseen during training, the system can infer the best match.
+- **Efficient feature transfer**, allowing for natural-sounding synthesis without distorting speaker identity.
+
+The language-based similarity approach refines the voice conversion process by focusing on both **speaker similarity and linguistic consistency**, ensuring the most **natural and high-quality voice generation**.
+
 
 ### 9.3 Closest Language Matching During Inference
-1. Determine closest linguistic cluster  
-2. Apply threshold-based similarity  
-3. Choose nearest neighbor if direct match unavailable  
+o further enhance cross-lingual voice adaptation, Dis-Vector integrates a **nearest language matching** strategy. Given a target speaker's embedding, the system performs the following steps:
 
-Ensures minimal loss of naturalness, better adaptation, and scalability for zero-shot conversion.
+1. **Determine the closest linguistic cluster** by measuring the embedding distance to pre-computed cluster centroids.
+2. **Apply a threshold-based similarity measure** to ensure the closest linguistic match is selected.
+3. **If a direct match is unavailable**, the system chooses a linguistically nearest neighbor based on phonetic and prosody similarities.
+
+This technique ensures:
+- **Minimal loss in speech naturalness** by selecting speakers with the most similar phonetic structures.
+- **Improved speaker adaptation**, even in cases where the target speaker’s language is underrepresented in the dataset.
+- **Scalability for zero-shot voice conversion**, allowing seamless expansion with new speakers and languages.
+
+By leveraging this clustering-based framework, Dis-Vector significantly improves the accuracy and efficiency of voice conversion in **multilingual and low-resource language settings**, making it a robust solution for **global voice synthesis applications**.
 
 ---
 
