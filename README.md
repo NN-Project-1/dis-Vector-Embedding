@@ -220,10 +220,6 @@ By leveraging this clustering-based framework, Dis-Vector significantly improves
 ✅ **Fine-Grained Voice Cloning**  
 → Clone and adjust voice traits precisely using disentangled latent vectors.  
 
-✅ **VITS-TTS Integration**  
-
-✅ **GPT-TTS Integration**  
-
 ✅ **Language-Based Similarity Matching**  
 
 ✅ **Closest Language Matching During Inference**  
