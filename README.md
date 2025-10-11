@@ -204,7 +204,33 @@ By leveraging this clustering-based framework, Dis-Vector significantly improves
 
 ---
 
-## 10. Conclusion
-The Dis-Vector model’s zero-shot capabilities, enhanced by clustering and similarity-based retrieval, enable effective voice cloning and conversion across languages, setting a benchmark for high-quality, customizable voice synthesis.  
+## 10. DIS-VECTOR: Controllable Zero-Shot Voice Conversion & Cloning Features
+
+---
+
+✅ **Zero-Shot Voice Conversion**  
+→ Convert voices between unseen speakers without retraining.  
+
+✅ **Low-Resource Language Adaptation**  
+→ High-quality synthesis even in underrepresented languages.  
+
+✅ **Disentangled Embedding Control**  
+→ Independent manipulation of **Content**, **Pitch**, **Rhythm**, and **Timbre**.  
+
+✅ **Fine-Grained Voice Cloning**  
+→ Clone and adjust voice traits precisely using disentangled latent vectors.  
+
+✅ **VITS-TTS Integration**  
+
+✅ **GPT-TTS Integration**  
+
+✅ **Language-Based Similarity Matching**  
+
+✅ **Closest Language Matching During Inference**  
+
+✅ **Feature Transfer Mechanism**  
+→ Transfer **content**, **pitch**, **rhythm**, and **timbre** between any two speakers.  
+
+✅ **Scalable Zero-Shot Cloning System**  
 
 For more details, refer to the documentation. 🚀
