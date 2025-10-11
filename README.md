@@ -70,7 +70,7 @@ The Dis-Vector model consists of several key components that work together to ac
 ## 3. VITS-TTS Integration
 
 <p align="center">
-  <img src="architecture/d-v.png" alt="DIS-Vector Architecture">
+  <img src="architecture/d-v.png" alt="DIS-Vector Architecture" width="400">
 </p>
 
 Integrating VITS with DIS-Vector enhances its capabilities by leveraging disentangled embeddings of speech components (content, pitch, rhythm, and timbre). DIS-Vector provides fine-grained control over these components, enabling high-quality voice conversion and zero-shot voice cloning. This integration empowers VITS to generate speech in new voices, adapting to different speakers and languages without the need for speaker-specific training data, offering more flexibility and realism in synthetic speech generation.
