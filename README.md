@@ -205,7 +205,6 @@ By leveraging this clustering-based framework, Dis-Vector significantly improves
 
 ## 10. DIS-VECTOR: Controllable Zero-Shot Voice Conversion & Cloning Features
 
----
 
 ✅ **Zero-Shot Voice Conversion**  
 → Convert voices between unseen speakers without retraining.  
