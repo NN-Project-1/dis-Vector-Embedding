@@ -28,7 +28,6 @@ We have Approach 1, which is the base version of DIS-Vector. The details are pro
    1. [K-Means Clustering for Speaker Embeddings](#91-k-means-clustering-for-speaker-embeddings)  
    2. [Language-Based Similarity Matching](#92-language-based-similarity-matching)  
    3. [Closest Language Matching During Inference](#93-closest-language-matching-during-inference)  
-10. [Conclusion](#10-conclusion)  
 
 ---
 
@@ -214,11 +213,20 @@ By leveraging this clustering-based framework, Dis-Vector significantly improves
 ✅ **Low-Resource Language Adaptation**  
 → High-quality synthesis even in underrepresented languages.  
 
+✅ **Cross-Gender Voice Cloning**  
+→ Convert voices across gender (male ↔ female) while keeping tone natural.  
+
+✅ **Cross-Lingual Voice Cloning**  
+→ Clone and adapt voices across different languages.  
+
+✅ **Indian Language Adaptation**  
+→ Supports major Indian languages like Hindi, Tamil, Telugu, Malayalam, and Bengali.  
+
 ✅ **Disentangled Embedding Control**  
 → Independent manipulation of **Content**, **Pitch**, **Rhythm**, and **Timbre**.  
 
 ✅ **Fine-Grained Voice Cloning**  
-→ Clone and adjust voice traits precisely using disentangled latent vectors.  
+→ Clone and adjust voice traits precisely using latent vectors.  
 
 ✅ **Language-Based Similarity Matching**  
 
@@ -228,5 +236,8 @@ By leveraging this clustering-based framework, Dis-Vector significantly improves
 → Transfer **content**, **pitch**, **rhythm**, and **timbre** between any two speakers.  
 
 ✅ **Scalable Zero-Shot Cloning System**  
+
+For more details, refer to the documentation. 🚀
+
 
 For more details, refer to the documentation. 🚀
