@@ -122,7 +122,7 @@ Integrating the DIS-Vector framework within modern TTS systems enhances synthesi
 ### 4.1 VITS Integration  
 
 <p align="center">
-  <img src="architecture/vits-disvector.png" alt="VITS + DIS-Vector Integration" width="450">
+  <img src="architecture/d-v.png" alt="VITS + DIS-Vector Integration" width="450">
 </p>
 
 The **VITS architecture** is extended with disentangled speech embeddings from DIS-Vector to enable multi-speaker, zero-shot, and cross-lingual speech synthesis. The VITS model consists of three core components: a **text encoder**, a **posterior encoder**, and a **flow-based decoder combined with a HiFi-GAN vocoder**.  
