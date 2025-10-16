@@ -50,7 +50,7 @@ The DIS-Vector model is a multi-encoder disentanglement-based speech representat
   <img src="architecture/DIS-Vector-V2.png" alt="Dis-Vector Architecture"  width="400">
 </p>
 
-DIS-Vector follows a **parallel encoder structure** in which each encoder extracts a distinct feature domain from synchronized mel-spectrogram frames represented as `[B, T, F]`, where `B` is batch size, `T` denotes sequence length, and `F` represents mel-frequency bins. The four encoders—content, pitch, rhythm, and timbre—operate concurrently to generate their respective latent representations. These outputs are concatenated into a single **512-dimensional embedding vector**, forming a unified disentangled speech representation suitable for downstream decoding and synthesis.
+DIS-Vector follows a **parallel encoder structure** in which each encoder extracts a distinct feature domain from synchronized mel-spectrogram frames represented as `[B, T, F]`, where `B` is batch size, `T` denotes sequence length, and `F` represents mel-frequency bins. The four encoders content, pitch, rhythm, and timbre operate concurrently to generate their respective latent representations. These outputs are concatenated into a single **512-dimensional embedding vector**, forming a unified disentangled speech representation suitable for downstream decoding and synthesis.
 
 
 ### Encoder Specifications  
@@ -61,7 +61,6 @@ The **Content Encoder** captures linguistic and phonetic structures that define 
 
 The convolutional stack contains several 1D convolutional layers with kernel sizes between 3 and 5, followed by ReLU activation and layer normalization. The LSTM network, with a hidden dimension of 256, processes these convolutional outputs sequentially to generate a **256-dimensional content latent vector** (`z_c`). This latent vector encodes the phoneme-level linguistic structure necessary for accurate speech reconstruction and style-independent synthesis.
 
----
 
 #### Pitch Encoder  
 
@@ -69,7 +68,6 @@ The **Pitch Encoder** focuses on modeling the **fundamental frequency (F₀)** c
 
 The F₀ contour is first extracted from the waveform using a pitch estimation algorithm such as **PyWorld** or **YAAPT**, followed by log-normalization and alignment with mel frames. The CNN captures harmonic energy variations, and the LSTM models dynamic changes over time. The resulting **128-dimensional pitch latent vector** (`z_p`) represents tonal shape, direction, and smoothness while suppressing speaker-specific spectral effects. This latent serves as a precise prosodic descriptor, enabling tonal transfer across different speakers without losing natural pitch consistency.
 
----
 
 #### Rhythm Encoder  
 
@@ -79,7 +77,6 @@ The convolutional output sequence is passed to the LSTM network, which operates 
 
 The final hidden state sequence from the LSTM is mean-pooled across frames to obtain a **64-dimensional rhythm latent vector (`z_r`)**. This vector encodes detailed timing features, including speech rate, stress placement, and pause distribution. During synthesis, `z_r` determines frame-level timing control, allowing modification of utterance pacing and duration patterns while preserving the linguistic and pitch characteristics encoded in other latent representations.
 
----
 
 #### Timbre Encoder  
 
@@ -89,9 +86,7 @@ During processing, mel-spectrogram frames are linearly projected into a fixed em
 
 After all encoders complete their feature extraction, the resulting latent vectors are concatenated to form a unified **512-dimensional composite representation** defined as:
 
-z_DIS = [z_c; z_p; z_r; z_t]
-
----
+                                                         z_DIS = [z_c; z_p; z_r; z_t]
 
 ### Decoder and Reconstruction  
 
@@ -108,47 +103,57 @@ This reconstruction flow maintains strict frame-level alignment between input la
 
 ---
 
-### Design Rationale  
+## 3. Length Analysis 
 
-The architecture of DIS-Vector follows the **principle of structured disentanglement**. The CNN–LSTM encoders (for content, pitch, and rhythm) are optimized for local spectral and sequential modeling, providing stability and temporal precision. The Transformer-based timbre encoder introduces global spectral attention, enabling accurate representation of speaker-specific qualities that convolutional networks typically overlook.  
+Ablation experiments were conducted to determine the optimal latent dimensionality for the unified DIS-vector representation. The embedding dimension directly affects the model’s ability to encode disentangled acoustic information across linguistic, prosodic, rhythmic, and timbral domains. Models were trained with varying latent sizes—256, 512, 768, and 1024 dimensions under identical training conditions and data configurations.  
 
-This hybrid integration achieves a balance between local detail and global dependency modeling, producing high-fidelity, controllable, and speaker-adaptive synthesis. The resulting DIS-vector representation supports flexible manipulation across speech dimensions, allowing expressive and natural voice conversion across languages and speaker styles.
+At 256 dimensions, the reduced latent capacity led to significant degradation in reconstruction fidelity, particularly in representing timbral richness and cross-speaker spectral variations. The decoder exhibited over-smoothing effects in the high-frequency regions, indicating insufficient embedding granularity to retain speaker-specific nuances.  
+
+Increasing the latent dimension to 768 and 1024 improved information retention marginally but introduced redundancy across latent channels. These higher-dimensional variants resulted in slower convergence rates and unstable disentanglement behavior, as excessive capacity allowed overlapping feature representations between pitch, rhythm, and timbre subspaces.  
+
+Empirical evaluation showed that 512-dimensional embeddings provided an optimal trade-off between representational richness and computational efficiency. This configuration maintained high perceptual quality while ensuring stable convergence across training epochs. The 512D latent space demonstrated sufficient discriminative power to separate linguistic, prosodic, and speaker-dependent information without introducing redundancy. Consequently, the final DIS-vector architecture employs a **512-dimensional unified representation**, experimentally validated as the most balanced and efficient configuration for precise and interpretable acoustic disentanglement.
 
 ---
 
-## 3. VITS-TTS Integration
+## 4. TTS Integration
+
+Integrating the DIS-Vector framework within modern TTS systems enhances synthesis controllability and disentanglement across linguistic, prosodic, and timbral domains. The unified 512-dimensional latent vector acts as a conditioning signal that independently modulates acoustic, rhythmic, and phonetic representations within the synthesis pipeline. This section describes the integration of DIS-Vector with **TTS** (VITS-based) and **GPT-TTS**, focusing on architectural details and embedding-level interaction mechanisms.  
+
+### 4.1 VITS Integration  
 
 <p align="center">
-  <img src="architecture/d-v.png" alt="DIS-Vector Architecture" width="400">
+  <img src="architecture/vits-disvector.png" alt="VITS + DIS-Vector Integration" width="450">
 </p>
 
-Integrating VITS with DIS-Vector enhances its capabilities by leveraging disentangled embeddings of speech components (content, pitch, rhythm, and timbre). DIS-Vector provides fine-grained control over these components, enabling high-quality voice conversion and zero-shot voice cloning. This integration empowers VITS to generate speech in new voices, adapting to different speakers and languages without the need for speaker-specific training data, offering more flexibility and realism in synthetic speech generation.
+The **VITS architecture** is extended with disentangled speech embeddings from DIS-Vector to enable multi-speaker, zero-shot, and cross-lingual speech synthesis. The VITS model consists of three core components: a **text encoder**, a **posterior encoder**, and a **flow-based decoder combined with a HiFi-GAN vocoder**.  
+
+The **text encoder** is implemented as a combination of convolutional layers and Transformer blocks. The convolutional layers extract local phonetic patterns and short-term dependencies from the input phoneme or grapheme sequences, while the Transformer layers model long-range dependencies and contextual information across the entire utterance. The text encoder outputs a frame-level sequence of **linguistic priors**, which serve as the basis for mapping phonemes to acoustic frames in the synthesis process.
+
+The **posterior encoder** is an LSTM-based network that processes ground-truth mel-spectrograms to generate **latent posterior variables** aligned at the frame level. The LSTM captures temporal dependencies across acoustic frames, encoding prosodic dynamics such as pitch contour and rhythm. In the integrated pipeline, the pitch (`z_p`) and rhythm (`z_r`) latents from the DIS-Vector are injected into the posterior encoder outputs using **Adaptive Instance Normalization (AdaIN)** and **Feature-wise Linear Modulation (FiLM)** layers. This frame-level conditioning allows the model to reproduce fine-grained F₀ variations, syllabic timing, and energy patterns without requiring explicit prosody supervision.
+
+The **flow-based decoder** converts the latent posterior distribution into the acoustic prior, which is then decoded into mel-spectrogram frames. The timbre latent (`z_t`) is injected as a speaker-defining variable into the flow-based decoder. This conditioning modulates the affine coupling layers and the normalizing flow transformations, enabling precise control over spectral envelope, formant structure, and harmonic content. Following mel-spectrogram generation, the **HiFi-GAN vocoder** synthesizes the time-domain waveform. The same timbre latent is applied within the vocoder layers to maintain consistency of spectral texture and harmonic structure across frames.
+
+The **integration of DIS-Vector embeddings** into VITS occurs across the entire pipeline. The content latent (`z_c`) is concatenated with text encoder outputs to align linguistic features with frame-level acoustic priors. The pitch and rhythm latents modulate posterior encoder outputs to encode temporal and prosodic dynamics. The timbre latent shapes the decoder and vocoder outputs, ensuring speaker-specific spectral fidelity. During inference, this architecture allows zero-shot voice cloning by replacing the timbre subvector with embeddings extracted from unseen speakers, maintaining the original content, rhythm, and prosody. This design transforms VITS into a fully disentangled generative model capable of independent control over content, rhythm, pitch, and speaker identity, while preserving end-to-end high-fidelity synthesis.
 
 ---
 
-## 4. GPT-TTS Integration
+### 4.2 GPT-TTS Integration
 
 <p align="center">
   <img src="architecture/gpt.png" alt="DIS-Vector Architecture" width="400">
 </p>
 
+The **GPT-based TTS** model implements an autoregressive text-to-acoustic generation pipeline using a Transformer decoder trained on discrete latent representations obtained from a **Vector-Quantized Variational Autoencoder (VQ-VAE)**. Input text is first tokenized using **Byte-Pair Encoding (BPE)**, producing subword units that are mapped into dense embeddings. These embeddings are processed through stacked **Transformer decoder blocks**, each trained to predict the next discrete acoustic token in the sequence.
 
-Our GPT-based architecture for zero-shot voice cloning processes input text through a byte-pair encoding (BPE) tokenizer to generate subword tokens, which are then embedded and passed through a stack of autoregressive GPT-style Transformer blocks. These blocks are trained to predict discrete latent codes from a Vector-Quantized Variational Autoencoder (VQ-VAE), which encodes ground-truth acoustic features into discrete indices that serve as the training targets. Crucially, the pre-computed 512-dimensional DIS-Vector speaker embeddings, which disentangle content, pitch, rhythm, and timbre, are projected to the model's dimension and injected into the network through a dual-conditioning mechanism: they are concatenated with the encoder's input tokens and also used for Feature-wise Linear Modulation (FiLM) conditioning within the Transformer blocks' activations. This ensures the model's predictions are conditioned on both the linguistic content and the precise vocal characteristics of the target speaker. The output predicted VQ-VAE codes are subsequently decoded into frame-level acoustic representations, which, together with the DIS-Vector embeddings, condition a HiFi-GAN vocoder to synthesize the final waveform directly from the latent features, enabling high-fidelity, zero-shot voice cloning.
+The **DIS-Vector** provides a 512-dimensional conditioning signal for both linguistic alignment and speaker-specific acoustic modulation. This latent vector is projected to match the Transformer embedding dimension and applied through two complementary mechanisms. First, the projected DIS-Vector is concatenated with input token embeddings at every timestep, ensuring each autoregressive step incorporates explicit content, prosody, and timbre information. Second, the same latent is used for **Feature-wise Linear Modulation (FiLM)**, generating scale and shift coefficients that modulate the Transformer feed-forward and attention activations, enabling fine-grained control over pitch contour, rhythm, and spectral texture.
 
----
+The decoder predicts sequences of discrete VQ indices representing quantized mel-spectrogram segments. These indices are subsequently decoded by the VQ-VAE decoder into frame-level acoustic features. A pretrained **HiFi-GAN vocoder** synthesizes the final waveform from these features, conditioned by the same DIS-Vector embeddings to maintain consistency across linguistic, prosodic, and speaker dimensions.
 
-## 5. Length Analysis
-Ablation experiments were conducted with embedding lengths: 256, 512, 768, 1024.  
-
-- 256D: Noticeable information loss, especially in timbre variations.  
-- 768D & 1024D: Redundant, slower convergence without significant quality improvement.  
-- 512D: Best balance; sufficient capacity to disentangle content, pitch, rhythm, timbre while maintaining training stability and efficiency.  
-
-Final architecture adopts **512D embeddings** as an experimentally validated optimal trade-off.
+By integrating DIS-Vector embeddings, the system supports **zero-shot voice cloning** and cross-lingual synthesis. The timbre and rhythm components can be replaced with embeddings extracted from unseen speakers, allowing the model to preserve content and linguistic accuracy while adapting prosody and spectral characteristics. This framework enables expressive, controllable speech generation with precise frame-level alignment between textual input and acoustic output.
 
 ---
 
-## 6. Speech Component Representation
+## 5. Speech Component Representation
 
 A speech signal \( s(t) \) is decomposed into four components:
 
@@ -163,7 +168,7 @@ A speech signal \( s(t) \) is decomposed into four components:
 
 ---
 
-## 7. Types of Loss Functions
+## 6. Types of Loss Functions
 
 - **Mean Squared Error (MSE) Loss**: Minimizes difference between predicted and actual continuous components.  
 
@@ -191,9 +196,9 @@ Where:
 
 ---
 
-## 8. Evaluation
+## 7. Evaluation
 
-### 8.1 Test Setup
+### 7.1 Test Setup
 
 <p align="center">
   <img src="architecture/plot_dif.png" alt="DIS-Vector Architecture" width="300">
@@ -204,17 +209,17 @@ Where:
 - **Timbre Testing**: Timbre Error Rate (TER)  
 - **Content Testing**: Content Preservation Rate (CPR)  
 
-### 8.2 Distance Measurement
+### 7.2 Distance Measurement
 - **Cosine Similarity**: Evaluates feature transfer and voice synthesis  
 
-### 8.3 Ground Truth vs. TTS Output Similarity
+### 7.3 Ground Truth vs. TTS Output Similarity
 - Measures similarity in pitch, rhythm, timbre, and content  
 
 ---
 
-## 9. Clustering & Language Matching
+## 8. Clustering & Language Matching
 
-### 9.1 K-Means Clustering for Speaker Embeddings
+### 8.1 K-Means Clustering for Speaker Embeddings
 Dis-Vector utilizes a **language-annotated speaker embedding database**, where each speaker is mapped to a distinct feature representation based on their **timbre and prosody characteristics**. To enable efficient **cross-speaker and cross-language voice conversion**, we apply **K-Means clustering** on these high-dimensional embeddings. This clustering process helps to:
 
 - **Group speakers** based on intrinsic vocal attributes such as pitch, intonation, and articulation patterns.
@@ -224,7 +229,7 @@ Dis-Vector utilizes a **language-annotated speaker embedding database**, where e
 
 By organizing the embedding space into well-defined clusters, Dis-Vector ensures a more structured and interpretable representation of speaker embeddings, enhancing the **quality and accuracy of voice conversion**.
 
-### 9.2 Language-Based Similarity Matching
+### 8.2 Language-Based Similarity Matching
 
 
 During inference, the model selects the **most suitable speaker embedding** by computing **cosine similarity** between the **target speaker’s embedding** and the **pre-clustered speaker embeddings** in the database. This method prioritizes selecting a **linguistically similar speaker**, leading to:
@@ -236,7 +241,7 @@ During inference, the model selects the **most suitable speaker embedding** by c
 The language-based similarity approach refines the voice conversion process by focusing on both **speaker similarity and linguistic consistency**, ensuring the most **natural and high-quality voice generation**.
 
 
-### 9.3 Closest Language Matching During Inference
+### 8.3 Closest Language Matching During Inference
 o further enhance cross-lingual voice adaptation, Dis-Vector integrates a **nearest language matching** strategy. Given a target speaker's embedding, the system performs the following steps:
 
 1. **Determine the closest linguistic cluster** by measuring the embedding distance to pre-computed cluster centroids.
@@ -252,38 +257,18 @@ By leveraging this clustering-based framework, Dis-Vector significantly improves
 
 ---
 
-## 10. DIS-VECTOR: Controllable Zero-Shot Voice Conversion & Cloning Features
-
+## 9. DIS-VECTOR: Controllable Zero-Shot Voice Conversion & Cloning Features
 
 ✅ **Zero-Shot Voice Conversion**  
-→ Convert voices between unseen speakers without retraining.  
-
 ✅ **Low-Resource Language Adaptation**  
-→ High-quality synthesis even in underrepresented languages.  
-
 ✅ **Cross-Gender Voice Cloning**  
-→ Convert voices across gender (male ↔ female) while keeping tone natural.  
-
 ✅ **Cross-Lingual Voice Cloning**  
-→ Clone and adapt voices across different languages.  
-
 ✅ **Indian Language Adaptation**  
-→ Supports major Indian languages like Hindi, Tamil, Telugu, Malayalam, and Bengali.  
-
+            → Supports major Indian languages like Hindi, Tamil, Telugu, Malayalam, and Bengali.  
 ✅ **Disentangled Embedding Control**  
-→ Independent manipulation of **Content**, **Pitch**, **Rhythm**, and **Timbre**.  
-
-✅ **Fine-Grained Voice Cloning**  
-→ Clone and adjust voice traits precisely using latent vectors.  
-
 ✅ **Language-Based Similarity Matching**  
-
-✅ **Closest Language Matching During Inference**  
-
 ✅ **Feature Transfer Mechanism**  
 → Transfer **content**, **pitch**, **rhythm**, and **timbre** between any two speakers.  
-
-✅ **Scalable Zero-Shot Cloning System**  
 
 For more details, refer to the documentation. 🚀
 
