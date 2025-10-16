@@ -6,9 +6,6 @@ The **DIS-Vector** model introduces a novel approach to voice conversion by dise
 
 We have Approach 1, which is the base version of DIS-Vector. The details are provided [here](https://github.com/NN-Project-1/dis-Vector-Embedding/blob/main/readme1.md).
 
-<p align="center">
-  <img src="architecture/DIS-Vector-V2.png" alt="Dis-Vector Architecture"  width="400">
-</p>
 
 ---
 
@@ -47,23 +44,75 @@ Explore our [live demo here](https://nn-project-1.github.io/dis-vector_web/) sho
 ---
 
 ## 2. Dis-Vector Model Details
-The Dis-Vector model consists of several key components that work together to achieve effective voice conversion and synthesis:
+The DIS-Vector model is a multi-encoder disentanglement-based speech representation framework developed for expressive, cross-lingual, and zero-shot voice conversion. The design goal is to separate key aspects of human speech content, pitch, rhythm, and timbre into distinct, independently controllable latent embeddings. This architecture enables precise manipulation of each speech attribute while maintaining perceptual coherence in synthesis, allowing natural-sounding speaker conversion and expressive style transfer without retraining.
 
-- **Architecture**: Multi-encoder design with dedicated encoders for each feature type:  
-  - **Content Encoder**: Captures linguistic content and phonetic characteristics.  
-  - **Pitch Encoder**: Extracts pitch-related features for accurate pitch reproduction.  
-  - **Rhythm Encoder**: Analyzes rhythmic patterns to preserve original speech flow.  
-  - **Timbre Encoder**: Captures unique vocal qualities for natural-sounding outputs.  
+<p align="center">
+  <img src="architecture/DIS-Vector-V2.png" alt="Dis-Vector Architecture"  width="400">
+</p>
 
-- **Disentangled Embeddings**: 512-dimensional embedding vector structured as:  
-  - 256 elements for **content features**  
-  - 128 elements for **pitch features**  
-  - 64 elements for **rhythm features**  
-  - 64 elements for **timbre features**  
+DIS-Vector follows a **parallel encoder structure** in which each encoder extracts a distinct feature domain from synchronized mel-spectrogram frames represented as `[B, T, F]`, where `B` is batch size, `T` denotes sequence length, and `F` represents mel-frequency bins. The four encoders—content, pitch, rhythm, and timbre—operate concurrently to generate their respective latent representations. These outputs are concatenated into a single **512-dimensional embedding vector**, forming a unified disentangled speech representation suitable for downstream decoding and synthesis.
 
-- **Zero-Shot Capability**: Enables voice cloning and conversion across languages without extensive training.  
 
-- **Feature Transfer**: Allows transfer of individual features from source to target voice while retaining original essence.  
+### Encoder Specifications  
+
+#### Content Encoder  
+
+The **Content Encoder** captures linguistic and phonetic structures that define the spoken message while remaining independent of speaker characteristics. It utilizes a **hybrid CNN–LSTM architecture**. The convolutional layers model local spectral correlations and phonetic transitions from short-term mel segments, whereas the LSTM layers preserve long-term linguistic continuity across frames. This combination ensures that both spectral detail and sequential context are effectively represented.
+
+The convolutional stack contains several 1D convolutional layers with kernel sizes between 3 and 5, followed by ReLU activation and layer normalization. The LSTM network, with a hidden dimension of 256, processes these convolutional outputs sequentially to generate a **256-dimensional content latent vector** (`z_c`). This latent vector encodes the phoneme-level linguistic structure necessary for accurate speech reconstruction and style-independent synthesis.
+
+---
+
+#### Pitch Encoder  
+
+The **Pitch Encoder** focuses on modeling the **fundamental frequency (F₀)** contour and tonal variations that determine intonation and expressiveness. It employs a **CNN–LSTM design** similar to the content encoder. The convolutional layers extract frequency periodicity and harmonic structure from mel-spectrogram inputs, while the LSTM captures frame-to-frame pitch progression and smooth tonal movement.
+
+The F₀ contour is first extracted from the waveform using a pitch estimation algorithm such as **PyWorld** or **YAAPT**, followed by log-normalization and alignment with mel frames. The CNN captures harmonic energy variations, and the LSTM models dynamic changes over time. The resulting **128-dimensional pitch latent vector** (`z_p`) represents tonal shape, direction, and smoothness while suppressing speaker-specific spectral effects. This latent serves as a precise prosodic descriptor, enabling tonal transfer across different speakers without losing natural pitch consistency.
+
+---
+
+#### Rhythm Encoder  
+
+The **Rhythm Encoder** models the temporal structure of speech at the **frame level**, focusing on the timing, duration, and energy variations that define rhythmic patterns. The input mel-spectrogram sequence is processed using a **CNN–LSTM architecture** designed to learn both local and sequential temporal cues. The convolutional layers extract short-range frame-level amplitude modulations and energy transitions corresponding to syllable boundaries and intra-word timing. Each convolutional operation is followed by ReLU activation and layer normalization to stabilize feature scaling across frames.
+
+The convolutional output sequence is passed to the LSTM network, which operates over the same frame-aligned time axis. The LSTM captures extended dependencies between consecutive frames, modeling duration patterns, inter-phoneme gaps, and rhythmic continuity across the entire utterance. During training, frame-level duration labels are obtained from **forced alignment outputs** (e.g., Montreal Forced Aligner), where each mel frame is explicitly aligned to its corresponding phoneme boundary. These aligned frame-level mappings enable the LSTM to learn the precise temporal distribution of speech frames.
+
+The final hidden state sequence from the LSTM is mean-pooled across frames to obtain a **64-dimensional rhythm latent vector (`z_r`)**. This vector encodes detailed timing features, including speech rate, stress placement, and pause distribution. During synthesis, `z_r` determines frame-level timing control, allowing modification of utterance pacing and duration patterns while preserving the linguistic and pitch characteristics encoded in other latent representations.
+
+---
+
+#### Timbre Encoder  
+
+The **Timbre Encoder** processes mel-spectrogram sequences at the frame level to extract speaker-specific spectral features that define vocal identity, resonance, and spectral coloration. The encoder is implemented using a **Transformer-based architecture** optimized for long-range dependency modeling across both frequency and temporal dimensions. Each Transformer block consists of **multi-head self-attention (MHSA)**, **position-wise feed-forward layers**, **layer normalization**, and **residual connections**. The MHSA mechanism computes attention weights across all time–frequency positions, allowing each frame embedding to integrate spectral context from the entire utterance.
+
+During processing, mel-spectrogram frames are linearly projected into a fixed embedding space and combined with positional encodings that preserve frame order. The attention module analyzes correlations between frequency bands, capturing resonance and spectral envelope patterns that distinguish one speaker from another. Feed-forward sublayers apply non-linear transformations to refine feature separability, while residual normalization stabilizes gradient flow during training. The output of the final Transformer layer is mean-pooled across frames to generate a fixed-length **64-dimensional timbre latent vector (`z_t`)**. This latent vector represents the static and dynamic timbral attributes that uniquely characterize the speaker’s voice, including vocal tract shape, formant structure, and spectral slope behavior.
+
+After all encoders complete their feature extraction, the resulting latent vectors are concatenated to form a unified **512-dimensional composite representation** defined as:
+
+z_DIS = [z_c; z_p; z_r; z_t]
+
+---
+
+### Decoder and Reconstruction  
+
+The **Decoder** performs frame-level mel-spectrogram reconstruction from the unified 512-dimensional **DIS-vector** `[z_c; z_p; z_r; z_t]`. The input vector sequence is first linearly projected and temporally expanded to match the original frame resolution. This projection initializes the decoder input sequence, where each frame embedding represents the fused acoustic state derived from content, pitch, rhythm, and timbre components.
+
+The decoder architecture is implemented using **stacked Transformer-based upsampling blocks** followed by **convolutional refinement layers**. Each Transformer block consists of multi-head self-attention (MHSA), feed-forward sublayers, and residual normalization. The MHSA mechanism computes attention weights over all frame positions, allowing each reconstructed frame to access long-range contextual information across the entire utterance. This operation models inter-frame dependencies in both temporal and spectral dimensions, ensuring that transitions between phonemes and prosodic segments remain continuous.
+
+Following the attention layers, temporal upsampling is performed through learned linear interpolation modules that double the frame resolution at each stage. This process restores the original temporal resolution of the mel-spectrogram without loss of synchronization. After upsampling, **1D convolutional refinement layers** with kernel size 5 are applied to each frame sequence to enhance local spectral resolution and correct frame-level distortions. These convolutional layers reconstruct harmonic detail and formant structure from the encoded latent features.
+
+The decoder output is a sequence of mel-spectrogram frames `Ŝ ∈ ℝ^{T×F}`, where each frame corresponds directly to its original temporal index. The reconstructed spectrogram is then converted into the final waveform using a pretrained **HiFi-GAN neural vocoder** operating in 22.05 kHz sampling mode. The vocoder synthesizes waveform samples directly from the decoder’s mel output, preserving amplitude envelope and spectral envelope consistency.  
+
+This reconstruction flow maintains strict frame-level alignment between input latents and output acoustics, ensuring that content, pitch, rhythm, and timbre information are coherently mapped to the final audio representation without cross-domain interference.
+
+
+---
+
+### Design Rationale  
+
+The architecture of DIS-Vector follows the **principle of structured disentanglement**. The CNN–LSTM encoders (for content, pitch, and rhythm) are optimized for local spectral and sequential modeling, providing stability and temporal precision. The Transformer-based timbre encoder introduces global spectral attention, enabling accurate representation of speaker-specific qualities that convolutional networks typically overlook.  
+
+This hybrid integration achieves a balance between local detail and global dependency modeling, producing high-fidelity, controllable, and speaker-adaptive synthesis. The resulting DIS-vector representation supports flexible manipulation across speech dimensions, allowing expressive and natural voice conversion across languages and speaker styles.
 
 ---
 
