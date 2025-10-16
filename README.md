@@ -41,7 +41,6 @@ The Dis-Vector model represents a significant advancement in voice conversion an
 ### Sample Output Demo
 Explore our [live demo here](https://nn-project-1.github.io/dis-vector_web/) showcasing the capabilities of the Dis-Vector model! Users can listen to synthesized audio samples highlighting accurate replication and transformation of speaker characteristics.
 
----
 
 ## 2. Dis-Vector Model Details
 The DIS-Vector model is a multi-encoder disentanglement-based speech representation framework developed for expressive, cross-lingual, and zero-shot voice conversion. The design goal is to separate key aspects of human speech content, pitch, rhythm, and timbre into distinct, independently controllable latent embeddings. This architecture enables precise manipulation of each speech attribute while maintaining perceptual coherence in synthesis, allowing natural-sounding speaker conversion and expressive style transfer without retraining.
@@ -86,7 +85,7 @@ During processing, mel-spectrogram frames are linearly projected into a fixed em
 
 After all encoders complete their feature extraction, the resulting latent vectors are concatenated to form a unified **512-dimensional composite representation** defined as:
 
-                                                         z_DIS = [z_c; z_p; z_r; z_t]
+                                             z_DIS = [z_c; z_p; z_r; z_t]
 
 ### Decoder and Reconstruction  
 
@@ -101,8 +100,6 @@ The decoder output is a sequence of mel-spectrogram frames `Ŝ ∈ ℝ^{T×F}`, 
 This reconstruction flow maintains strict frame-level alignment between input latents and output acoustics, ensuring that content, pitch, rhythm, and timbre information are coherently mapped to the final audio representation without cross-domain interference.
 
 
----
-
 ## 3. Length Analysis 
 
 Ablation experiments were conducted to determine the optimal latent dimensionality for the unified DIS-vector representation. The embedding dimension directly affects the model’s ability to encode disentangled acoustic information across linguistic, prosodic, rhythmic, and timbral domains. Models were trained with varying latent sizes—256, 512, 768, and 1024 dimensions under identical training conditions and data configurations.  
@@ -113,7 +110,6 @@ Increasing the latent dimension to 768 and 1024 improved information retention m
 
 Empirical evaluation showed that 512-dimensional embeddings provided an optimal trade-off between representational richness and computational efficiency. This configuration maintained high perceptual quality while ensuring stable convergence across training epochs. The 512D latent space demonstrated sufficient discriminative power to separate linguistic, prosodic, and speaker-dependent information without introducing redundancy. Consequently, the final DIS-vector architecture employs a **512-dimensional unified representation**, experimentally validated as the most balanced and efficient configuration for precise and interpretable acoustic disentanglement.
 
----
 
 ## 4. TTS Integration
 
@@ -135,8 +131,6 @@ The **flow-based decoder** converts the latent posterior distribution into the a
 
 The **integration of DIS-Vector embeddings** into VITS occurs across the entire pipeline. The content latent (`z_c`) is concatenated with text encoder outputs to align linguistic features with frame-level acoustic priors. The pitch and rhythm latents modulate posterior encoder outputs to encode temporal and prosodic dynamics. The timbre latent shapes the decoder and vocoder outputs, ensuring speaker-specific spectral fidelity. During inference, this architecture allows zero-shot voice cloning by replacing the timbre subvector with embeddings extracted from unseen speakers, maintaining the original content, rhythm, and prosody. This design transforms VITS into a fully disentangled generative model capable of independent control over content, rhythm, pitch, and speaker identity, while preserving end-to-end high-fidelity synthesis.
 
----
-
 ### 4.2 GPT-TTS Integration
 
 <p align="center">
@@ -151,8 +145,6 @@ The decoder predicts sequences of discrete VQ indices representing quantized mel
 
 By integrating DIS-Vector embeddings, the system supports **zero-shot voice cloning** and cross-lingual synthesis. The timbre and rhythm components can be replaced with embeddings extracted from unseen speakers, allowing the model to preserve content and linguistic accuracy while adapting prosody and spectral characteristics. This framework enables expressive, controllable speech generation with precise frame-level alignment between textual input and acoustic output.
 
----
-
 ## 5. Speech Component Representation
 
 A speech signal \( s(t) \) is decomposed into four components:
@@ -165,8 +157,6 @@ A speech signal \( s(t) \) is decomposed into four components:
 - **P(t) (Pitch):** Fundamental frequency \( F_0 \)  
 - **R(t) (Rhythm):** Duration and timing patterns  
 - **T(t) (Timbre):** Speaker identity characteristics  
-
----
 
 ## 6. Types of Loss Functions
 
@@ -194,8 +184,6 @@ Where:
 - **L_rhythm**: Maintains timing  
 - **L_timbre**: Preserves speaker identity  
 
----
-
 ## 7. Evaluation
 
 ### 7.1 Test Setup
@@ -215,8 +203,6 @@ Where:
 ### 7.3 Ground Truth vs. TTS Output Similarity
 - Measures similarity in pitch, rhythm, timbre, and content  
 
----
-
 ## 8. Clustering & Language Matching
 
 ### 8.1 K-Means Clustering for Speaker Embeddings
@@ -231,7 +217,6 @@ By organizing the embedding space into well-defined clusters, Dis-Vector ensures
 
 ### 8.2 Language-Based Similarity Matching
 
-
 During inference, the model selects the **most suitable speaker embedding** by computing **cosine similarity** between the **target speaker’s embedding** and the **pre-clustered speaker embeddings** in the database. This method prioritizes selecting a **linguistically similar speaker**, leading to:
 
 - **Better prosody preservation**, as speakers from the same linguistic background share similar pitch and rhythm structures.
@@ -239,7 +224,6 @@ During inference, the model selects the **most suitable speaker embedding** by c
 - **Efficient feature transfer**, allowing for natural-sounding synthesis without distorting speaker identity.
 
 The language-based similarity approach refines the voice conversion process by focusing on both **speaker similarity and linguistic consistency**, ensuring the most **natural and high-quality voice generation**.
-
 
 ### 8.3 Closest Language Matching During Inference
 o further enhance cross-lingual voice adaptation, Dis-Vector integrates a **nearest language matching** strategy. Given a target speaker's embedding, the system performs the following steps:
@@ -254,8 +238,6 @@ This technique ensures:
 - **Scalability for zero-shot voice conversion**, allowing seamless expansion with new speakers and languages.
 
 By leveraging this clustering-based framework, Dis-Vector significantly improves the accuracy and efficiency of voice conversion in **multilingual and low-resource language settings**, making it a robust solution for **global voice synthesis applications**.
-
----
 
 ## 9. DIS-VECTOR: Controllable Zero-Shot Voice Conversion & Cloning Features
 
