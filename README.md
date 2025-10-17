@@ -43,7 +43,7 @@ Explore our [live demo here](https://nn-project-1.github.io/dis-vector_web/) sho
 
 
 ## 2. Dis-Vector Model Details
-The DIS-Vector model is a multi-encoder disentanglement-based speech representation framework developed for expressive, cross-lingual, and zero-shot voice conversion. The design goal is to separate key aspects of human speech content, pitch, rhythm, and timbre into distinct, independently controllable latent embeddings. This architecture enables precise manipulation of each speech attribute while maintaining perceptual coherence in synthesis, allowing natural-sounding speaker conversion and expressive style transfer without retraining.
+The DIS-Vector model is a multi-encoder disentanglementbased speech representation framework developed for expressive, cross-lingual, and zero-shot voice conversion. The design goal is to separate key aspects of human speech content, pitch, rhythm, and timbre into distinct, independently controllable latent embeddings. This architecture enables precise manipulation of each speech attribute while maintaining perceptual coherence in synthesis, allowing natural-sounding speaker conversion and expressive style transfer without retraining.
 
 <p align="center">
   <img src="architecture/DIS-Vector-V2.png" alt="Dis-Vector Architecture"  width="400">
@@ -65,7 +65,7 @@ The convolutional stack contains several 1D convolutional layers with kernel siz
 
 The **Pitch Encoder** focuses on modeling the **fundamental frequency (F₀)** contour and tonal variations that determine intonation and expressiveness. It employs a **CNN–LSTM design** similar to the content encoder. The convolutional layers extract frequency periodicity and harmonic structure from mel-spectrogram inputs, while the LSTM captures frame-to-frame pitch progression and smooth tonal movement.
 
-The F₀ contour is first extracted from the waveform using a pitch estimation algorithm such as **PyWorld** or **YAAPT**, followed by log-normalization and alignment with mel frames. The CNN captures harmonic energy variations, and the LSTM models dynamic changes over time. The resulting **128-dimensional pitch latent vector** (`z_p`) represents tonal shape, direction, and smoothness while suppressing speaker-specific spectral effects. This latent serves as a precise prosodic descriptor, enabling tonal transfer across different speakers without losing natural pitch consistency.
+The F₀ contour is first extracted from the waveform using a pitch estimation algorithm such as **PyWorld**, followed by log-normalization and alignment with mel frames. The CNN captures harmonic energy variations, and the LSTM models dynamic changes over time. The resulting **128-dimensional pitch latent vector** (`z_p`) represents tonal shape, direction, and smoothness while suppressing speaker-specific spectral effects. This latent serves as a precise prosodic descriptor, enabling tonal transfer across different speakers without losing natural pitch consistency.
 
 
 #### Rhythm Encoder  
