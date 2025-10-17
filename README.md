@@ -11,20 +11,20 @@ We have Approach 1, which is the base version of DIS-Vector. The details are pro
 
 ## 📚 Table of Contents
 1. [Overview](#1-overview)  
-2. [Dis-Vector Model Details](#2-dis-vector-model-details)  
-3. [VITS-TTS Integration](#3-vits-tts-integration)  
-4. [GPT-TTS Integration](#4-gpt-tts-integration)  
-5. [Length Analysis](#5-length-analysis)  
-6. [Speech Component Representation](#6-speech-component-representation)  
-7. [Types of Loss Functions](#7-types-of-loss-functions)  
-8. [Evaluation](#8-evaluation)  
+2. [Dis-Vector Model Details](#2-dis-vector-model-details)
+3. [Length Analysis](#5-length-analysis)  
+4. [TTS Integration](#3-vits-tts-integration)  
+5. [Speech Component Representation](#6-speech-component-representation)  
+6. [Types of Loss Functions](#7-types-of-loss-functions)  
+7. [Evaluation](#8-evaluation)  
    1. [Test Setup](#81-test-setup)  
    2. [Distance Measurement](#82-distance-measurement)  
    3. [Ground Truth vs. TTS Output Similarity](#83-ground-truth-vs-tts-output-similarity)  
-9. [Clustering & Language Matching](#9-clustering--language-matching)  
+8. [Clustering & Language Matching](#9-clustering--language-matching)  
    1. [K-Means Clustering for Speaker Embeddings](#91-k-means-clustering-for-speaker-embeddings)  
    2. [Language-Based Similarity Matching](#92-language-based-similarity-matching)  
-   3. [Closest Language Matching During Inference](#93-closest-language-matching-during-inference)  
+   3. [Closest Language Matching During Inference](#93-closest-language-matching-during-inference)
+
 
 ---
 
