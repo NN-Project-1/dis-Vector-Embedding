@@ -102,7 +102,7 @@ This reconstruction flow maintains strict frame-level alignment between input la
 
 ## 3. Length Analysis 
 
-Ablation experiments were conducted to determine the optimal latent dimensionality for the unified DIS-vector representation. The embedding dimension directly affects the model’s ability to encode disentangled acoustic information across linguistic, prosodic, rhythmic, and timbral domains. Models were trained with varying latent sizes—256, 512, 768, and 1024 dimensions under identical training conditions and data configurations.  
+Ablation experiments were conducted to determine the optimal latent dimensionality for the unified DIS-vector representation. The embedding dimension directly affects the model’s ability to encode disentangled acoustic information across linguistic, prosodic, rhythmic, and timbral domains. Models were trained with varying latent sizes 256, 512, 768, and 1024 dimensions under identical training conditions and data configurations.  
 
 At 256 dimensions, the reduced latent capacity led to significant degradation in reconstruction fidelity, particularly in representing timbral richness and cross-speaker spectral variations. The decoder exhibited over-smoothing effects in the high-frequency regions, indicating insufficient embedding granularity to retain speaker-specific nuances.  
 
