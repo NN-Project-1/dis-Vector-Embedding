@@ -213,6 +213,63 @@ This technique ensures:
 
 By leveraging this clustering-based framework, Dis-Vector significantly improves the accuracy and efficiency of voice conversion in **multilingual and low-resource language settings**, making it a robust solution for **global voice synthesis applications**.
 
+
+## MOS Evaluation Results
+
+This section presents the **Mean Opinion Score (MOS)** evaluation results for monolingual, cross-lingual, and zero-shot voice conversion and voice cloning experiments conducted using the **DIS-Vector** framework.
+
+---
+
+### Table 1. MOS Score for Monolingual Voice Conversion
+
+| Source Language (Gender) | Target Language (Gender) | MOS |
+|-------------------------|--------------------------|-----|
+| English (Male)          | English (Female)         | 3.8 |
+| Hindi (Female)          | Hindi (Male)             | 3.7 |
+
+---
+
+### Table 2. MOS Score for Cross-Lingual Voice Conversion
+
+| Source Language (Gender) | Target Language (Gender) | MOS |
+|-------------------------|--------------------------|-----|
+| English (Male)          | Hindi (Female)           | 3.9 |
+| Hindi (Female)          | Telugu (Male)            | 3.7 |
+
+---
+
+### Table 3. MOS Score for Zero-Shot Cross-Lingual Voice Cloning (DIS-Vector)
+
+| Source Language (Gender) | Target Language (Gender) | MOS |
+|-------------------------|--------------------------|-----|
+| English (Male)          | Hindi (Female)           | 3.8 |
+| Hindi (Male)            | English (Female)         | 3.6 |
+
+---
+
+### Table 4. MOS Score for Zero-Shot Monolingual Voice Cloning (DIS-Vector)
+
+| Source Language (Gender) | Target Language (Gender) | MOS |
+|-------------------------|--------------------------|-----|
+| English (Male)          | English (Female)         | 3.9 |
+| Hindi (Male)            | Hindi (Female)           | 3.7 |
+
+---
+
+## Experimental Analysis
+
+The MOS evaluation results indicate that the **DIS-Vector** model achieves consistently high perceptual quality across both monolingual and cross-lingual settings. Monolingual voice conversion and cloning experiments exhibit slightly higher MOS values, reflecting improved speaker similarity and naturalness when the source and target languages are identical.
+
+Cross-lingual and zero-shot voice cloning experiments demonstrate the robustness of the DIS-Vector representation in disentangling speaker identity from linguistic content. The relatively small degradation in MOS scores across unseen language and speaker combinations suggests strong generalization capability, making the proposed approach suitable for multilingual and zero-shot voice synthesis scenarios.
+
+
+## References
+
+- **Shabdh: A Multi-Lingual Zero-Shot Voice Cloning Approach with Speaker Disentanglement**  
+  🔗 https://ieeexplore.ieee.org/document/10890203
+
+
+
 ## 8. DIS-VECTOR: Controllable Zero-Shot Voice Conversion & Cloning Features
 
 ✅ **Zero-Shot Voice Conversion**  
