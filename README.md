@@ -333,37 +333,24 @@ WER captures word-level lexical deviations, while CER captures fine-grained phon
 
 #### 6.6.5 Interpretation
 
-- **Average WER increase**: 0.9%  
-- **Average CER increase**: 0.7%  
-- Error increases remain consistent across Indo-Aryan and Dravidian languages.
-- Content degradation remains bounded under zero-shot inference and cross-speaker synthesis.
+The ASR-based evaluation demonstrates that the DIS-Vector model effectively preserves linguistic content across zero-shot and cross-speaker synthesis scenarios.  
 
-These results indicate that the content embedding (`z_c`) preserves acoustic–phonetic structure while remaining invariant to pitch, rhythm, and timbre manipulation.
+- **Average WER increase** of 0.9% and **average CER increase** of 0.7% indicate minimal lexical and phoneme-level deviations between original and synthesized speech.  
+- The error increase is consistent across both **Indo-Aryan** (English, Hindi) and **Dravidian** (Tamil, Telugu, Malayalam) languages, confirming robust cross-lingual content preservation.  
+- Content degradation remains bounded even under **unseen speakers and zero-shot language conditions**, demonstrating the model’s generalization capability.  
+- These results confirm that the **content embedding (`z_c`) effectively encodes acoustic–phonetic structure** while remaining invariant to manipulation of **pitch, rhythm, and timbre**, ensuring that factor-specific control does not compromise the underlying speech content.
+
 
 ---
 
-## MOS Evaluation Results
+##6.7 Subjective Evaluation: Mean Opinion Scores
 
 Mean Opinion Score (MOS) evaluation is conducted to assess perceptual naturalness, speaker similarity, and transfer quality of synthesized speech produced by the DIS-Vector framework.
 
-### MOS Evaluation Protocol
-
-- **Listeners**:  
-  - 30 native listeners per language  
-  - Language-matched evaluation (listeners evaluate only their native language)  
-- **Evaluation scale**: 5-point MOS  
-- **Samples per condition**: 20 utterances per speaker–language pair  
-- **Total speakers evaluated**: 20 (balanced across gender)  
-- **Listening setup**:  
-  - Headphone-based listening  
-  - Randomized sample order  
-  - Quiet environment  
-
-Each listener evaluates samples independently without access to reference audio during scoring.
-
----
 
 ### Table 1. MOS Score for Monolingual Voice Conversion
+
+* MOS results for voice conversion within the same language, evaluating naturalness and speaker similarity.*
 
 | Source Language (Gender) | Target Language (Gender) | MOS |
 |-------------------------|--------------------------|-----|
@@ -374,6 +361,8 @@ Each listener evaluates samples independently without access to reference audio 
 
 ### Table 2. MOS Score for Cross-Lingual Voice Conversion
 
+* MOS results for voice conversion across different languages, showing the model’s ability to maintain perceptual quality and speaker similarity when adapting to a new language.*
+
 | Source Language (Gender) | Target Language (Gender) | MOS |
 |-------------------------|--------------------------|-----|
 | English (Male)          | Hindi (Female)           | 3.9 |
@@ -382,6 +371,8 @@ Each listener evaluates samples independently without access to reference audio 
 ---
 
 ### Table 3. MOS Score for Zero-Shot Cross-Lingual Voice Cloning (DIS-Vector)
+
+* MOS results for cloning unseen speakers across different languages without any adaptation, demonstrating zero-shot generalization and preservation of naturalness.*
 
 | Source Language (Gender) | Target Language (Gender) | MOS |
 |-------------------------|--------------------------|-----|
@@ -392,6 +383,8 @@ Each listener evaluates samples independently without access to reference audio 
 
 ### Table 4. MOS Score for Zero-Shot Monolingual Voice Cloning (DIS-Vector)
 
+* MOS results for cloning unseen speakers within the same language, indicating the model’s ability to preserve naturalness and speaker identity without prior exposure.*
+
 | Source Language (Gender) | Target Language (Gender) | MOS |
 |-------------------------|--------------------------|-----|
 | English (Male)          | English (Female)         | 3.9 |
@@ -399,7 +392,8 @@ Each listener evaluates samples independently without access to reference audio 
 
 
 
-### 6.7 Test Setup
+
+### 6.8 Test Setup
 
 <p align="center">
   <img src="architecture/plot_dif.png" alt="DIS-Vector Architecture" width="300">
@@ -436,7 +430,7 @@ During inference, the model selects the **most suitable speaker embedding** by c
 The language-based similarity approach refines the voice conversion process by focusing on both **speaker similarity and linguistic consistency**, ensuring the most **natural and high-quality voice generation**.
 
 ### 7.3 Closest Language Matching During Inference
-o further enhance cross-lingual voice adaptation, Dis-Vector integrates a **nearest language matching** strategy. Given a target speaker's embedding, the system performs the following steps:
+To further enhance cross-lingual voice adaptation, Dis-Vector integrates a **nearest language matching** strategy. Given a target speaker's embedding, the system performs the following steps:
 
 1. **Determine the closest linguistic cluster** by measuring the embedding distance to pre-computed cluster centroids.
 2. **Apply a threshold-based similarity measure** to ensure the closest linguistic match is selected.
