@@ -2,9 +2,11 @@
 
 Welcome to the DIS-Vector project! This repository presents an advanced low-resource, zero-shot voice conversion and cloning model that leverages disentangled embeddings, clustering techniques, and language-based similarity matching to achieve highly natural and controllable voice synthesis.
 
-The **DIS-Vector** model introduces a novel approach to voice conversion by disentangling speech components content, pitch, rhythm, and timbre into separate embedding spaces, enabling fine-grained control over voice synthesis. Unlike traditional voice conversion models, DIS-Vector is capable of zero-shot voice cloning, meaning it can synthesize voices from unseen speakers and languages without requiring large-scale speaker-specific training data.
+The **DIS-Vector** model introduces a novel approach to voice conversion by disentangling speech components—content, pitch, rhythm, and timbre—into separate embedding spaces, enabling fine-grained control over voice synthesis. Unlike traditional voice conversion models, DIS-Vector is capable of zero-shot voice cloning, meaning it can synthesize voices from unseen speakers and languages without requiring large-scale speaker-specific training data.
 
-We have Approach 1, which is the base version of DIS-Vector. The details are provided [here](https://github.com/NN-Project-1/dis-Vector-Embedding/blob/main/readme1.md).
+We have **Approach 1**, which is the base version of DIS-Vector. The details are provided **[here](https://github.com/NN-Project-1/dis-Vector-Embedding/blob/main/readme1.md)**.
+
+**Demo:** [https://nn-project-1.github.io/dis-vector_web/](https://nn-project-1.github.io/dis-vector_web/)
 
 
 ---
@@ -158,95 +160,19 @@ Where:
 - **L_rhythm**: Maintains timing  
 - **L_timbre**: Preserves speaker identity  
 
-## 6. Evaluation
+## Experiments and Evaluation
 
-### Disentanglement Validation Experiments
+The experimental evaluation of the DIS-Vector framework is designed to rigorously validate explicit disentanglement, zero-shot generalization, and perceptual quality under controlled inference conditions. The core objective is to empirically demonstrate that content, pitch, rhythm, and timbre are independently encoded in separate latent spaces and can be manipulated without inducing unintended changes in non-target speech attributes. All experiments are conducted under strict zero-shot conditions, where both speakers and language pairs used during evaluation are entirely unseen during training.
 
-To rigorously validate the independent controllability of content, pitch, rhythm, and timbre within the DIS-Vector framework, we conduct a comprehensive disentanglement validation study under a strict zero-shot inference setting. The objective is to empirically demonstrate that manipulating one latent factor results in controlled variation of the intended speech attribute while leaving non-target factors largely unaffected.
+DIS-Vector represents speech using four explicitly disentangled latent embeddings: content (`z_c`), pitch (`z_p`), rhythm (`z_r`), and timbre (`z_t`). Each factor is learned using an independent encoder, while decoding is performed using a shared decoder–vocoder pipeline. This architectural choice ensures that any observed factor independence in synthesized speech arises from true latent disentanglement rather than decoder specialization.
 
-In DIS-Vector, speech is represented using four explicitly disentangled latent embeddings:
+To validate disentanglement, factor-wise latent manipulation experiments are conducted. Given a source utterance and a target utterance, only one latent embedding is replaced at a time while the remaining embeddings are kept fixed. The modified latent tuple is concatenated to form the unified DIS-vector and passed through the shared decoder and neural vocoder. This controlled substitution establishes a causal link between the manipulated latent factor and the resulting acoustic variation in the synthesized speech.
 
-- Content (`z_c`)
-- Pitch (`z_p`)
-- Rhythm (`z_r`)
-- Timbre (`z_t`)
+All experiments are performed under zero-shot inference conditions. No speakers or language pairs overlap with training data, and no speaker adaptation, fine-tuning, or language-specific calibration is applied at inference time. For each latent factor, one hundred synthesized utterances are generated using factor-wise substitution, and both target-factor variation and non-target-factor stability are quantitatively evaluated.
 
-These embeddings are learned through independent encoders and jointly decoded through a shared decoder–vocoder pipeline. The validation experiments are designed to test whether each embedding encodes factor-specific information and supports independent manipulation during inference.
+Content consistency is evaluated using cosine similarity between content embeddings extracted from synthesized speech and target content references. Lower similarity values indicate stronger content adaptation, while higher values indicate content preservation. Pitch variation is measured using fundamental frequency (F0) RMSE, rhythmic variation is evaluated using Dynamic Time Warping (DTW) on frame-level duration contours, and timbre variation is quantified using Equal Error Rate (EER) from a pretrained speaker verification model. Perceptual quality and similarity are evaluated using Mean Opinion Score (MOS).
 
----
-
-### 6.1 Experimental Setup
-
-#### 6.1.1 Factor-wise Latent Manipulation
-
-For disentanglement analysis, we perform factor-wise latent substitution. Given a source utterance and a target utterance, only one latent component is replaced at a time, while all remaining latent embeddings are kept fixed.
-
-- **Content manipulation**: replace `z_c` while keeping `z_p`, `z_r`, and `z_t` unchanged  
-- **Pitch manipulation**: replace `z_p` while keeping `z_c`, `z_r`, and `z_t` unchanged  
-- **Rhythm manipulation**: replace `z_r` while keeping `z_c`, `z_p`, and `z_t` unchanged  
-- **Timbre manipulation**: replace `z_t` while keeping `z_c`, `z_p`, and `z_r` unchanged  
-
-The modified latent tuple is concatenated to form the unified DIS-vector and passed through the shared decoder and neural vocoder to synthesize speech. This controlled substitution ensures that any observed variation in the output signal can be attributed solely to the manipulated latent factor.
-
-#### 6.1.2 Zero-Shot Inference Condition
-
-All experiments are conducted under zero-shot conditions:
-
-- Speakers are unseen during training  
-- Language pairs are unseen during training  
-- No speaker adaptation, fine-tuning, or language-specific calibration is applied  
-
-This setting evaluates whether the learned embeddings generalize across speakers and languages while preserving disentanglement properties during inference.
-
-#### 6.1.3 Evaluation Protocol
-
-- For each latent factor, 100 synthesized utterances are generated using factor-wise substitution  
-- Both target-factor variation and non-target-factor stability are measured  
-- Objective embedding-space metrics are combined with perceptual evaluation  
-
----
-
-### 6.2 Evaluation Metrics
-
-#### 6.2.1 Acoustic Content Consistency
-
-In DIS-Vector, content refers to acoustic–phonetic structure, including phoneme realization patterns, articulation characteristics, and spectral–temporal organization that define what is being spoken, independent of speaker identity.
-
-Content consistency is evaluated using cosine similarity between content embeddings (`z_c`) extracted from synthesized speech and the target content reference.
-
-- Lower similarity indicates stronger content change  
-- Higher similarity indicates content preservation  
-
-This embedding-based evaluation enables cross-lingual and zero-shot assessment without reliance on ASR or textual transcription.
-
-#### 6.2.2 Pitch Variation
-
-Pitch variation is measured using fundamental frequency (F0) RMSE.
-
-- Higher RMSE indicates stronger pitch manipulation  
-- Low RMSE under non-pitch manipulation indicates pitch stability  
-
-#### 6.2.3 Rhythm Variation
-
-Rhythmic structure is evaluated using Dynamic Time Warping (DTW) on frame-level duration contours derived from mel-spectrogram alignment.
-
-- Higher DTW indicates stronger temporal and pacing modification  
-- Stability under non-rhythm manipulation confirms rhythm isolation  
-
-#### 6.2.4 Timbre Consistency
-
-Speaker identity change is measured using speaker verification Equal Error Rate (EER) computed from a pretrained speaker embedding model.
-
-- Higher EER indicates stronger timbre change  
-- Stable EER under non-timbre manipulation indicates identity preservation  
-
-#### 6.3 Perceptual Similarity
-
-Perceptual similarity is evaluated using Mean Opinion Score (MOS), reflecting overall naturalness and perceived similarity to the intended target factor.
-
----
-
-### 6.4. Quantitative Results
+### Quantitative Disentanglement Results
 
 | Modified Factor | Content Cosine ↓ | Pitch RMSE ↑ | Rhythm DTW ↑ | Timbre EER ↑ | MOS ↑ |
 |-----------------|-----------------|--------------|--------------|--------------|-------|
@@ -256,154 +182,67 @@ Perceptual similarity is evaluated using Mean Opinion Score (MOS), reflecting ov
 | Timbre Only     | 0.90            | 1.3 Hz       | 0.86         | 0.48         | 4.1   |
 | All Factors     | 0.45            | 43.2 Hz      | 0.90         | 0.46         | 3.9   |
 
-- Lower values indicate stronger change in the target factor.  
-- Higher values indicate successful manipulation.  
+Lower values indicate stronger change in the target factor, while higher values indicate successful manipulation. The results show that manipulating each latent factor produces a strong response in its corresponding metric while leaving non-target metrics largely unchanged. Across all conditions, cross-factor interference remains below 15%, confirming effective disentanglement under zero-shot inference.
 
----
+Replacing only the content embedding produces a substantial shift in acoustic–phonetic structure, reflected by low content cosine similarity, while pitch, rhythm, and timbre remain stable. Pitch manipulation results in large F0 deviations without affecting content or speaker identity. Rhythm manipulation alters temporal pacing while preserving phonetic structure and timbre. Timbre manipulation yields the strongest speaker identity shift with minimal impact on content and prosody. These results collectively confirm independent controllability of all four factors.
 
-### 6.5. Analysis and Interpretation
+### ASR-Based Content Preservation Evaluation
 
-#### 6.5.1 Content Manipulation
+To further verify linguistic content preservation, ASR-based evaluation is conducted using Word Error Rate (WER) and Character Error Rate (CER). External ASR systems are employed to avoid bias from internal representations. Whisper (large-v3) is used for English, while an Indic ASR pipeline based on IndicWav2Vec and IndicTrans is used for Hindi, Tamil, Telugu, and Malayalam.
 
-Replacing only the content embedding (`z_c`) results in a substantial shift in acoustic–phonetic structure, reflected by low content cosine similarity (0.42). Pitch, rhythm, and timbre remain stable, indicating phonetic adaptation without speaker leakage.
+The evaluation dataset consists of five hundred utterances across five languages, with ten speakers per language and no speaker overlap with training data. Original speech and DIS-Vector–synthesized speech are transcribed using identical ASR configurations, and WER and CER are computed by aligning ASR hypotheses.
 
-#### 6.5.2 Pitch Manipulation
+### ASR Content Preservation Results
 
-Substituting the pitch embedding (`z_p`) produces large F0 deviations (RMSE: 45.8 Hz) while maintaining high content similarity (0.91) and stable timbre, confirming independent pitch control.
+| Language   | WER (%) Original | WER (%) DIS-Vector | CER (%) Original | CER (%) DIS-Vector |
+|-----------|------------------|--------------------|------------------|--------------------|
+| English   | 3.2              | 4.1                | 1.1              | 1.8                |
+| Hindi     | 5.8              | 6.5                | 2.3              | 2.9                |
+| Tamil     | 7.2              | 8.1                | 3.1              | 3.8                |
+| Telugu    | 6.9              | 7.7                | 2.8              | 3.4                |
+| Malayalam | 6.5              | 7.2                | 2.5              | 3.1                |
 
-#### 6.5.3 Rhythm Manipulation
+The average WER increase of 0.9% and CER increase of 0.7% demonstrate that linguistic content is preserved even under zero-shot and cross-speaker synthesis. These results confirm that the content embedding encodes acoustic–phonetic structure while remaining invariant to pitch, rhythm, and timbre manipulation.
 
-Rhythm embedding substitution significantly alters temporal pacing (DTW: 0.92) while preserving pitch, content, and timbre, validating explicit rhythm control.
+### Subjective Evaluation: Mean Opinion Scores
 
-#### 6.5.4 Timbre Manipulation
+Subjective evaluation is conducted using Mean Opinion Score (MOS) to assess perceptual naturalness, speaker similarity, and transfer quality. Twenty-five listeners evaluate randomized samples using a five-point scale under controlled listening conditions.
 
-Replacing the timbre embedding (`z_t`) yields the strongest speaker identity shift (EER: 0.48, MOS: 4.1) with minimal impact on content and prosody.
+#### Monolingual Voice Conversion
 
-#### 6.5.5 Cross-Factor Interference
+| Source Language | Target Language | MOS |
+|-----------------|-----------------|-----|
+| English (M)     | English (F)     | 3.8 |
+| Hindi (F)       | Hindi (M)       | 3.7 |
 
-Across all conditions, non-target factor deviations remain below 15%, indicating minimal cross-factor leakage and strong disentanglement under zero-shot inference.
+#### Cross-Lingual Voice Conversion
 
+| Source Language | Target Language | MOS |
+|-----------------|-----------------|-----|
+| English (M)     | Hindi (F)       | 3.9 |
+| Hindi (F)       | Telugu (M)      | 3.7 |
 
-### 6.6 ASR-Based Content Preservation Evaluation
+#### Zero-Shot Cross-Lingual Voice Cloning
 
-To measure linguistic content preservation under zero-shot and factor-wise manipulation, **Word Error Rate (WER)** and **Character Error Rate (CER)** are computed between original speech and DIS-Vector–synthesized speech using external ASR systems. ASR-based evaluation is employed to directly quantify phonetic and lexical stability at the transcription level, independent of internal latent representations.
+| Source Language | Target Language | MOS |
+|-----------------|-----------------|-----|
+| English (M)     | Hindi (F)       | 3.8 |
+| Hindi (M)       | English (F)     | 3.6 |
 
-#### 6.6.1 ASR Models Used
+#### Zero-Shot Monolingual Voice Cloning
 
-The following ASR models are used for transcription:
+| Source Language | Target Language | MOS |
+|-----------------|-----------------|-----|
+| English (M)     | English (F)     | 3.9 |
+| Hindi (M)       | Hindi (F)       | 3.7 |
 
-- **Whisper (large-v3)**  
-  A multilingual encoder–decoder ASR model with strong robustness to speaker variation and synthesis artifacts.
-
-- **Indic ASR (AI4Bharat / IndicWav2Vec + IndicTrans pipeline)**  
-  A language-specific ASR system optimized for Indian languages, incorporating phoneme-aware tokenization and script-level normalization for Hindi, Tamil, Telugu, and Malayalam.
-
-The Indic ASR system is selected to ensure accurate transcription for morphologically rich and script-diverse Indian languages, avoiding cross-lingual bias inherent in generic multilingual ASR models.
-
-#### 6.6.2 Dataset and Speaker Configuration
-
-- **Total utterances**: 500  
-- **Languages evaluated**: English, Hindi, Tamil, Telugu, Malayalam  
-- **Utterances per language**: 100  
-- **Speakers per language**: 10  
-- **Gender distribution**: 5 male, 5 female  
-- **Speaker overlap**: No speaker overlap between training and evaluation  
-- **Text content**: Sentence-level utterances with balanced phoneme coverage  
-
-#### 6.6.3 Evaluation Procedure
-
-1. Original speech utterances are transcribed using Whisper (large-v3) for English and Indic ASR for Indian languages.
-2. The same utterances are synthesized using DIS-Vector while preserving content (`z_c`) and modifying other factors.
-3. Synthesized speech is transcribed using identical ASR configurations.
-4. **WER** and **CER** are computed by aligning ASR hypotheses from original and synthesized speech.
-5. Scores are averaged across speakers and utterances for each language.
-
-WER captures word-level lexical deviations, while CER captures fine-grained phoneme and grapheme-level distortions, particularly relevant for agglutinative languages.
-
-#### 6.6.4 Results
-
-| Language   | WER (%) (Original) | WER (%) (DIS-Vector) | CER (%) (Original) | CER (%) (DIS-Vector) |
-|-----------|--------------------|----------------------|--------------------|----------------------|
-| English   | 3.2 | 4.1 | 1.1 | 1.8 |
-| Hindi     | 5.8 | 6.5 | 2.3 | 2.9 |
-| Tamil     | 7.2 | 8.1 | 3.1 | 3.8 |
-| Telugu    | 6.9 | 7.7 | 2.8 | 3.4 |
-| Malayalam | 6.5 | 7.2 | 2.5 | 3.1 |
-
-
-#### 6.6.5 Interpretation
-
-The ASR-based evaluation demonstrates that the DIS-Vector model effectively preserves linguistic content across zero-shot and cross-speaker synthesis scenarios.  
-
-- **Average WER increase** of 0.9% and **average CER increase** of 0.7% indicate minimal lexical and phoneme-level deviations between original and synthesized speech.  
-- The error increase is consistent across both **Indo-Aryan** (English, Hindi) and **Dravidian** (Tamil, Telugu, Malayalam) languages, confirming robust cross-lingual content preservation.  
-- Content degradation remains bounded even under **unseen speakers and zero-shot language conditions**, demonstrating the model’s generalization capability.  
-- These results confirm that the **content embedding (`z_c`) effectively encodes acoustic–phonetic structure** while remaining invariant to manipulation of **pitch, rhythm, and timbre**, ensuring that factor-specific control does not compromise the underlying speech content.
-
-
----
-
-##6.7 Subjective Evaluation: Mean Opinion Scores
-
-Mean Opinion Score (MOS) evaluation is conducted to assess perceptual naturalness, speaker similarity, and transfer quality of synthesized speech produced by the DIS-Vector framework.
-
-
-### Table 1. MOS Score for Monolingual Voice Conversion
-
-* MOS results for voice conversion within the same language, evaluating naturalness and speaker similarity.*
-
-| Source Language (Gender) | Target Language (Gender) | MOS |
-|-------------------------|--------------------------|-----|
-| English (Male)          | English (Female)         | 3.8 |
-| Hindi (Female)          | Hindi (Male)             | 3.7 |
-
----
-
-### Table 2. MOS Score for Cross-Lingual Voice Conversion
-
-* MOS results for voice conversion across different languages, showing the model’s ability to maintain perceptual quality and speaker similarity when adapting to a new language.*
-
-| Source Language (Gender) | Target Language (Gender) | MOS |
-|-------------------------|--------------------------|-----|
-| English (Male)          | Hindi (Female)           | 3.9 |
-| Hindi (Female)          | Telugu (Male)            | 3.7 |
-
----
-
-### Table 3. MOS Score for Zero-Shot Cross-Lingual Voice Cloning (DIS-Vector)
-
-* MOS results for cloning unseen speakers across different languages without any adaptation, demonstrating zero-shot generalization and preservation of naturalness.*
-
-| Source Language (Gender) | Target Language (Gender) | MOS |
-|-------------------------|--------------------------|-----|
-| English (Male)          | Hindi (Female)           | 3.8 |
-| Hindi (Male)            | English (Female)         | 3.6 |
-
----
-
-### Table 4. MOS Score for Zero-Shot Monolingual Voice Cloning (DIS-Vector)
-
-* MOS results for cloning unseen speakers within the same language, indicating the model’s ability to preserve naturalness and speaker identity without prior exposure.*
-
-| Source Language (Gender) | Target Language (Gender) | MOS |
-|-------------------------|--------------------------|-----|
-| English (Male)          | English (Female)         | 3.9 |
-| Hindi (Male)            | Hindi (Female)           | 3.7 |
-
-
-
-
-### 6.8 Test Setup
+### Test Setup
 
 <p align="center">
-  <img src="architecture/plot_dif.png" alt="DIS-Vector Architecture" width="300">
+  <img src="architecture/plot_dif.png" alt="DIS-Vector Evaluation Pipeline" width="300">
 </p>
 
-- **Pitch Testing**: Pitch Error Rate (PER)  
-- **Rhythm Testing**: Rhythm Error Rate (RER)  
-- **Timbre Testing**: Timbre Error Rate (TER)  
-- **Content Testing**: Content Preservation Rate (CPR)  
-
+The test setup evaluates pitch using Pitch Error Rate (PER), rhythm using Rhythm Error Rate (RER), timbre using Timbre Error Rate (TER), and content using Content Preservation Rate (CPR), ensuring consistent and factor-specific assessment across all experiments.
 
 
 
