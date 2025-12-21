@@ -21,14 +21,13 @@ We have **Approach 1**, which is the base version of DIS-Vector. The details are
    1. [Quantitative Disentanglement Results](#quantitative-disentanglement-results)  
    2. [ASR-Based Content Preservation Evaluation](#asr-based-content-preservation-evaluation)  
    3. [Subjective Evaluation: Mean Opinion Scores](#subjective-evaluation-mean-opinion-scores)  
-   4. [Test Setup](#test-setup)  
+   4. [DIS-Vector Testing Framework](#dis-vector-testing-framework)
 7. [Clustering & Language Matching](#7-clustering--language-matching)  
    1. [K-Means Clustering for Speaker Embeddings](#71-k-means-clustering-for-speaker-embeddings)  
    2. [Language-Based Similarity Matching](#72-language-based-similarity-matching)  
    3. [Closest Language Matching During Inference](#73-closest-language-matching-during-inference)  
-8. [Experimental Analysis](#experimental-analysis)  
-9. [References](#references)  
-10. [DIS-VECTOR Features](#8-dis-vector-controllable-zero-shot-voice-conversion--cloning-features)
+8. [References](#references)  
+9. [DIS-VECTOR Features](#8-dis-vector-controllable-zero-shot-voice-conversion--cloning-features)
 
 
 ---
@@ -164,7 +163,7 @@ Where:
 - **L_rhythm**: Maintains timing  
 - **L_timbre**: Preserves speaker identity  
 
-## Experiments and Evaluation
+## 6. Experiments and Evaluation
 
 The experimental evaluation of the DIS-Vector framework is designed to rigorously validate explicit disentanglement, zero-shot generalization, and perceptual quality under controlled inference conditions. The core objective is to empirically demonstrate that content, pitch, rhythm, and timbre are independently encoded in separate latent spaces and can be manipulated without inducing unintended changes in non-target speech attributes. All experiments are conducted under strict zero-shot conditions, where both speakers and language pairs used during evaluation are entirely unseen during training.
 
@@ -240,7 +239,7 @@ Subjective evaluation is conducted using Mean Opinion Score (MOS) to assess perc
 | English (M)     | English (F)     | 3.9 |
 | Hindi (M)       | Hindi (F)       | 3.7 |
 
-### Test Setup
+### DIS-Vector Testing Framework
 
 <p align="center">
   <img src="architecture/plot_dif.png" alt="DIS-Vector Evaluation Pipeline" width="300">
@@ -288,21 +287,14 @@ By leveraging this clustering-based framework, Dis-Vector significantly improves
 
 
 
-## Experimental Analysis
-
-The MOS evaluation results indicate that the **DIS-Vector** model achieves consistently high perceptual quality across both monolingual and cross-lingual settings. Monolingual voice conversion and cloning experiments exhibit slightly higher MOS values, reflecting improved speaker similarity and naturalness when the source and target languages are identical.
-
-Cross-lingual and zero-shot voice cloning experiments demonstrate the robustness of the DIS-Vector representation in disentangling speaker identity from linguistic content. The relatively small degradation in MOS scores across unseen language and speaker combinations suggests strong generalization capability, making the proposed approach suitable for multilingual and zero-shot voice synthesis scenarios.
-
-
-## References
+## 8. References
 
 - **Shabdh: A Multi-Lingual Zero-Shot Voice Cloning Approach with Speaker Disentanglement**  
   🔗 https://ieeexplore.ieee.org/document/10890203
 
 
 
-## 8. DIS-VECTOR: Controllable Zero-Shot Voice Conversion & Cloning Features
+## 9. DIS-VECTOR: Controllable Zero-Shot Voice Conversion & Cloning Features
 
 ✅ **Zero-Shot Voice Conversion**  
 ✅ **Low-Resource Language Adaptation**  
